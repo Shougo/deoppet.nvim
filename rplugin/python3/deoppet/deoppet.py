@@ -4,7 +4,7 @@
 # License: MIT license
 # ============================================================================
 
-from deoplete.parser import Parser
+from deoppet.parser import Parser
 
 
 class Deoppet():

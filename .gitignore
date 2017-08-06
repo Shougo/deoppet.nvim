@@ -1,3 +1,4 @@
+.cache
 *.py[cod]
 doc/tags
 vim-themis

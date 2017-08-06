@@ -9,3 +9,8 @@ class Parser():
 
     def __init__(self):
         pass
+
+    def parse(self, text):
+        for line in text.splitlines():
+            pass
+        return []
