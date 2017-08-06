@@ -1,14 +1,11 @@
 # ============================================================================
-# FILE: deoppet.py
+# FILE: parser.py
 # AUTHOR: Shougo Matsushita <Shougo.Matsu at gmail.com>
 # License: MIT license
 # ============================================================================
 
-from deoplete.parser import Parser
 
+class Parser():
 
-class Deoppet():
-
-    def __init__(self, vim):
-        self._vim = vim
-        self._parser = Parser()
+    def __init__(self):
+        pass
