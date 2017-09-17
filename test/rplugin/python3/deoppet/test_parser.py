@@ -51,7 +51,7 @@ options    word
     assert parser.parse(test_snippet3) == [{
         'trigger': 'foo',
         'abbr': 'bar',
-        'alias': ['baz'],
+        'alias': 'baz',
         'regexp': '^% ',
         'options': ['word'],
         'text': 'foobar',
