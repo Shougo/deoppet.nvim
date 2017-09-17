@@ -2,7 +2,7 @@ import sys
 print(sys.path)
 from deoppet.parser import Parser
 
-def test_parse():
+def test_parse_success():
     parser = Parser()
 
     test_snippet0 = """
@@ -56,3 +56,12 @@ options    word
         'options': ['word'],
         'text': 'foobar',
     }]
+
+def test_parse_error():
+    parser = Parser()
+
+    test_snippet0 = """
+snippet bar
+"""
+
+    assert parser.parse(test_snippet0) == []
