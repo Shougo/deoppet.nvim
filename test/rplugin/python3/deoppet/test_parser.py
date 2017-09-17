@@ -7,12 +7,21 @@ def test_parse():
 
     test_snippet0 = """
 """
+
     test_snippet1 = """
 snippet    foo
    foobar
 """
 
     test_snippet2 = """
+snippet    foo
+   foobar
+
+snippet    bar
+   baz
+"""
+
+    test_snippet3 = """
 snippet    foo
 abbr       bar
 alias      baz
@@ -28,7 +37,18 @@ options    word
         'text': 'foobar',
     }]
 
-    assert parser.parse(test_snippet2) == [{
+    assert parser.parse(test_snippet2) == [
+        {
+            'trigger': 'foo',
+            'text': 'foobar',
+        },
+        {
+            'trigger': 'bar',
+            'text': 'baz',
+        }
+    ]
+
+    assert parser.parse(test_snippet3) == [{
         'trigger': 'foo',
         'abbr': 'bar',
         'alias': ['baz'],

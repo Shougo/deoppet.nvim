@@ -32,7 +32,6 @@ class Parser():
                 return []
 
             snippet = self.parse_one_snippet()
-            return [snippet]
             if not snippet:
                 # Error
                 return []
