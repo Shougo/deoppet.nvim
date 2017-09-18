@@ -48,6 +48,14 @@ class DeoppetHandlers(object):
         # debug(self._vim, next_text)
         buf[linenr-1] = cur_text + snippet['text'] + next_text
         col = self._vim.call('len', cur_text + snippet['text'])
+        ns = self._vim.call('nvim_init_mark_ns', 'deoppet')
+        ids = []
+        for tabstop in snippet['tabstops']:
+            ids.append(self._vim.call('nvim_buf_set_mark',
+                                      buf.number, ns, 0,
+                                      tabstop['row'] + linenr,
+                                      tabstop['col'] + 1))
+        bvars['deoppet_marks'] = ids
         if next_text:
             self._vim.call('cursor', [linenr, col + 1])
             self._vim.command('startinsert')
