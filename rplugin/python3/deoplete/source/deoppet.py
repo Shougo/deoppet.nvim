@@ -18,14 +18,5 @@ class Source(Base):
         self.rank = 200
 
     def gather_candidates(self, context):
-        return []
-
-        parser = Parser()
-        snippets = []
-
-        for filename in globruntime(self.vim.options['runtimepath'],
-                                    'neosnippets/*.snip'):
-            # debug(self._vim, filename)
-            with open(filename) as f:
-                snippets += parser.parse(f.read())
+        snippets = self.vim.current.buffer.vars['deoppet_snippets']
         return [{'word': x['trigger']} for x in snippets]

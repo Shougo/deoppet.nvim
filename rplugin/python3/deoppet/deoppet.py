@@ -20,4 +20,4 @@ class Deoppet():
             # debug(self._vim, filename)
             with open(filename) as f:
                 self._snippets += self._parser.parse(f.read())
-        debug(self._vim, self._snippets)
+        self._vim.current.buffer.vars['deoppet_snippets'] = self._snippets
