@@ -47,6 +47,7 @@ class Parser():
         snippet = {}
         snippet['trigger'] = m.group(1)
         snippet['text'] = ''
+        snippet['options'] = {}
 
         # Parse the next line
         while (self.linenr + 1) < self.line_max:
@@ -70,7 +71,8 @@ class Parser():
 
             m = re.search('^options\s+(\S+)', line)
             if m:
-                snippet['options'] = m.group(1).split(' ')
+                for option in m.group(1).split(' '):
+                    snippet['options'][option] = True
                 continue
 
             m = re.search('^\s+(\S+)', line)

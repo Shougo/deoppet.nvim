@@ -35,16 +35,19 @@ options    word
     assert parser.parse(test_snippet1) == [{
         'trigger': 'foo',
         'text': 'foobar',
+        'options': {},
     }]
 
     assert parser.parse(test_snippet2) == [
         {
             'trigger': 'foo',
             'text': 'foobar',
+            'options': {},
         },
         {
             'trigger': 'bar',
             'text': 'baz',
+            'options': {},
         }
     ]
 
@@ -53,7 +56,7 @@ options    word
         'abbr': 'bar',
         'alias': 'baz',
         'regexp': '^% ',
-        'options': ['word'],
+        'options': {'word': True},
         'text': 'foobar',
     }]
 
