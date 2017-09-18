@@ -22,4 +22,5 @@ class Source(Base):
         if 'deoppet_snippets' not in bvars:
             return []
 
-        return [{'word': x['trigger']} for x in bvars['deoppet_snippets']]
+        return [{'word': x['trigger']} for x in
+                bvars['deoppet_snippets'].values()]

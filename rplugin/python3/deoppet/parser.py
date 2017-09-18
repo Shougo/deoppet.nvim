@@ -20,7 +20,7 @@ class Parser():
         self.linenr = 0
         self.line_max = len(self.lines)
 
-        snippets = []
+        snippets = {}
         while self.linenr < self.line_max:
             line = self.lines[self.linenr]
             if re.search('^\s*#|^\s*$', line):
@@ -29,13 +29,13 @@ class Parser():
                 continue
             if not re.search('^\s*snippet\s+', line):
                 # Error
-                return []
+                return {}
 
             snippet = self.parse_one_snippet()
             if not snippet:
                 # Error
-                return []
-            snippets.append(snippet)
+                return {}
+            snippets[snippet['trigger']] = snippet
         return snippets
 
     def parse_one_snippet(self):

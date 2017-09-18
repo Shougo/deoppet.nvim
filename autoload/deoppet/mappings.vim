@@ -9,7 +9,7 @@ function! deoppet#mappings#_init() abort
       \ deoppet#mappings#_expand_impl()
 
   " Test
-  imap <C-l>  <Plug>(deoppet_expand)
+  imap <C-k>  <Plug>(deoppet_expand)
 endfunction
 
 function! deoppet#mappings#_expand_impl() abort

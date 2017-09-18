@@ -30,35 +30,39 @@ options    word
    foobar
 """
 
-    assert parser.parse(test_snippet0) == []
+    assert parser.parse(test_snippet0) == {}
 
-    assert parser.parse(test_snippet1) == [{
-        'trigger': 'foo',
-        'text': 'foobar',
-        'options': {},
-    }]
+    assert parser.parse(test_snippet1) == {
+        'foo': {
+            'trigger': 'foo',
+            'text': 'foobar',
+            'options': {},
+        }
+    }
 
-    assert parser.parse(test_snippet2) == [
-        {
+    assert parser.parse(test_snippet2) == {
+        'foo': {
             'trigger': 'foo',
             'text': 'foobar',
             'options': {},
         },
-        {
+        'bar': {
             'trigger': 'bar',
             'text': 'baz',
             'options': {},
         }
-    ]
+    }
 
-    assert parser.parse(test_snippet3) == [{
-        'trigger': 'foo',
-        'abbr': 'bar',
-        'alias': 'baz',
-        'regexp': '^% ',
-        'options': {'word': True},
-        'text': 'foobar',
-    }]
+    assert parser.parse(test_snippet3) == {
+        'foo': {
+            'trigger': 'foo',
+            'abbr': 'bar',
+            'alias': 'baz',
+            'regexp': '^% ',
+            'options': {'word': True},
+            'text': 'foobar',
+        }
+    }
 
 def test_parse_error():
     parser = Parser()
@@ -67,4 +71,4 @@ def test_parse_error():
 snippet bar
 """
 
-    assert parser.parse(test_snippet0) == []
+    assert parser.parse(test_snippet0) == {}
