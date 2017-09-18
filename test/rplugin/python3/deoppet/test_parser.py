@@ -30,6 +30,11 @@ options    word
    foobar
 """
 
+    test_snippet4 = """
+snippet    foo
+   foobar ${1} ${2}
+"""
+
     assert parser.parse(test_snippet0) == {}
 
     assert parser.parse(test_snippet1) == {
@@ -37,6 +42,7 @@ options    word
             'trigger': 'foo',
             'text': 'foobar',
             'options': {},
+            'tabstops': [],
         }
     }
 
@@ -45,11 +51,13 @@ options    word
             'trigger': 'foo',
             'text': 'foobar',
             'options': {},
+            'tabstops': [],
         },
         'bar': {
             'trigger': 'bar',
             'text': 'baz',
             'options': {},
+            'tabstops': [],
         }
     }
 
@@ -61,6 +69,19 @@ options    word
             'regexp': '^% ',
             'options': {'word': True},
             'text': 'foobar',
+            'tabstops': [],
+        }
+    }
+
+    assert parser.parse(test_snippet4) == {
+        'foo': {
+            'trigger': 'foo',
+            'text': 'foobar  ',
+            'options': {},
+            'tabstops': [
+                {'number': 1, 'row': 0, 'col': 7},
+                {'number': 2, 'row': 0, 'col': 8},
+            ],
         }
     }
 

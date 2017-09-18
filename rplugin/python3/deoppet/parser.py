@@ -48,6 +48,7 @@ class Parser():
         snippet['trigger'] = m.group(1)
         snippet['text'] = ''
         snippet['options'] = {}
+        snippet['tabstops'] = []
 
         # Parse the next line
         while (self.linenr + 1) < self.line_max:
@@ -75,7 +76,7 @@ class Parser():
                     snippet['options'][option] = True
                 continue
 
-            m = re.search('^\s+(\S+)', line)
+            m = re.search('^\s+(.*)$', line)
             if m:
                 return self.parse_text(snippet)
 
@@ -86,12 +87,37 @@ class Parser():
         return {}
 
     def parse_text(self, snippet):
+        text_linenr = 0
         while self.linenr < self.line_max:
             line = self.lines[self.linenr]
-            m = re.search('^\s*(\S+)', line)
+            m = re.search('^\s+(.*)$', line)
             if not m:
                 return snippet
 
-            snippet['text'] += m.group(1)
+            # Substitute tabstops
+            line = m.group(1)
+            while 1:
+                [tabstop, line] = self.parse_tabstop(line, text_linenr)
+                if not tabstop:
+                    break
+
+                snippet['tabstops'].append(tabstop)
+
+            snippet['text'] += line
             self.linenr += 1
+            text_linenr += 1
         return snippet
+
+    def parse_tabstop(self, line, text_linenr):
+        m = re.search('\${(\d+)}', line)
+        if not m:
+            return [{}, line]
+
+        return [
+            {
+                'number': int(m.group(1)),
+                'row': text_linenr,
+                'col': m.start()
+            },
+            re.sub('\${(\d+)}', '', line, count=1)
+        ]
