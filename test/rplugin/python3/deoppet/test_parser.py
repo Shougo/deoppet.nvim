@@ -79,8 +79,8 @@ snippet    foo
             'text': 'foobar  ',
             'options': {},
             'tabstops': [
-                {'number': 1, 'row': 0, 'col': 7},
-                {'number': 2, 'row': 0, 'col': 8},
+                {'number': 1, 'row': 0, 'col': 7, 'default': ''},
+                {'number': 2, 'row': 0, 'col': 8, 'default': ''},
             ],
         }
     }

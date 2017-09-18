@@ -117,7 +117,8 @@ class Parser():
             {
                 'number': int(m.group(1)),
                 'row': text_linenr,
-                'col': m.start()
+                'col': m.start(),
+                'default': '',
             },
             re.sub('\${(\d+)}', '', line, count=1)
         ]
