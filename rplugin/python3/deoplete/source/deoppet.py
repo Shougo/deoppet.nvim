@@ -18,5 +18,8 @@ class Source(Base):
         self.rank = 200
 
     def gather_candidates(self, context):
-        snippets = self.vim.current.buffer.vars['deoppet_snippets']
-        return [{'word': x['trigger']} for x in snippets]
+        bvars = self.vim.current.buffer.vars
+        if 'deoppet_snippets' not in bvars:
+            return []
+
+        return [{'word': x['trigger']} for x in bvars['deoppet_snippets']]
