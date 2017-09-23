@@ -6,14 +6,15 @@
 
 function! deoppet#mappings#_init() abort
   inoremap <silent><expr> <Plug>(deoppet_expand)
-      \ deoppet#mappings#_expand_impl()
+      \ <SID>trigger('expand')
+  inoremap <silent><expr> <Plug>(deoppet_jump_forward)
+      \ <SID>trigger('jump_forward')
+  inoremap <silent><expr> <Plug>(deoppet_jump_backward)
+      \ <SID>trigger('jump_backward')
 
   " Test
   imap <C-k>  <Plug>(deoppet_expand)
-endfunction
-
-function! deoppet#mappings#_expand_impl() abort
-  return s:trigger('_deoppet_mapping')
+  imap <C-z>  <Plug>(deoppet_jump_forward)
 endfunction
 
 function! s:pre_trigger() abort
@@ -32,8 +33,8 @@ endfunction
 function! s:trigger(function) abort
   let [cur_text, col, expr] = s:pre_trigger()
 
-  let expr .= printf("\<ESC>:call %s(%s,%d)\<CR>",
-        \ a:function, string(cur_text), col)
+  let expr .= printf("\<ESC>:call %s(%s)\<CR>",
+        \ '_deoppet_mapping', string(a:function))
 
   return expr
 endfunction
