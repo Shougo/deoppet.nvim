@@ -1,10 +1,10 @@
 "=============================================================================
-" FILE: mappings.vim
+" FILE: mapping.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu at gmail.com>
 " License: MIT license
 "=============================================================================
 
-function! deoppet#mappings#_init() abort
+function! deoppet#mapping#_init() abort
   inoremap <silent><expr> <Plug>(deoppet_expand)
       \ <SID>trigger('expand')
   inoremap <silent><expr> <Plug>(deoppet_jump_forward)

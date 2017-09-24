@@ -11,11 +11,24 @@ class Mapping():
 
     def __init__(self, vim):
         self._vim = vim
+        self.clear()
 
     def debug(self, expr):
         return debug(self._vim, expr)
 
+    def clear(self):
+        self._ns = self._vim.call('nvim_init_mark_ns', 'deoppet')
+        self._vim.current.buffer.vars['deoppet_marks'] = []
+
     def mapping(self, name):
+        bvars = self._vim.current.buffer.vars
+        if 'deoppet_marks' not in bvars:
+            bvars['deoppet_marks'] = []
+        if 'deoppet_snippets' not in bvars:
+            return
+
+        if name == 'clear':
+            return self.clear()
         if name == 'expand':
             return self.expand()
         if name == 'jump_forward':
@@ -26,9 +39,6 @@ class Mapping():
 
     def expand(self):
         bvars = self._vim.current.buffer.vars
-        if 'deoppet_snippets' not in bvars:
-            return
-
         snippets = bvars['deoppet_snippets']
         cur_text = self._vim.call('deoppet#util#_get_cur_text')
         trigger = self._vim.call('deoppet#util#_get_cursor_snippet',
@@ -56,12 +66,13 @@ class Mapping():
                                       buf.number, self._ns, '',
                                       tabstop['row'] + linenr,
                                       tabstop['col'] + 1))
-        bvars['deoppet_marks'] = ids
+        bvars['deoppet_marks'] = ids + bvars['deoppet_marks']
         self.cursor(linenr, col, next_text)
 
     def jump(self, is_forward):
         bvars = self._vim.current.buffer.vars
-        if 'deoppet_marks' not in bvars or not bvars['deoppet_marks']:
+        if not bvars['deoppet_marks']:
+            self.nop()
             return
         buf = self._vim.current.buffer
         marks = bvars['deoppet_marks']
@@ -72,6 +83,11 @@ class Mapping():
         next_text = buf[mark[1]-1][mark[2]:]
         self.cursor(mark[1], mark[2], next_text)
         bvars['deoppet_marks'] = marks[1:] + [marks[0]]
+
+    def nop(self):
+        return self.cursor(self._vim.current.window.cursor[0],
+                           self._vim.current.window.cursor[1],
+                           self._vim.call('deoppet#util#_get_next_text'))
 
     def cursor(self, linenr, col, next_text):
         # self.debug(next_text)
