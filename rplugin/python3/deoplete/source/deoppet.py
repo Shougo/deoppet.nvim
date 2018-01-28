@@ -19,7 +19,8 @@ class Source(Base):
 
     def gather_candidates(self, context):
         bvars = self.vim.current.buffer.vars
-        if 'deoppet_snippets' not in bvars:
+        if 'deoppet_snippets' not in bvars or not isinstance(
+                bvars['deoppet_snippets'], dict):
             return []
 
         return [{'word': x['trigger']} for x in
