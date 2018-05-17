@@ -9,12 +9,15 @@ provides the snippet expansion.
 
 ## Installation
 
-**Note:** deoppet requires Neovim(latest is recommended) with Python3 enabled.
+**Note:** deoppet requires Neovim(latest is recommended) with Python3 enabled
+and https://github.com/neovim/neovim/pull/5031.
 See [requirements](#requirements) if you aren't sure whether you have this.
 
 1. Extract the files and put them in your Neovim directory
    (usually `$XDG_CONFIG_HOME/nvim/`).
 2. Execute the `:UpdateRemotePlugins` and restart Neovim.
+
+Note: deoppet does not work in Vim8 environment.
 
 
 For vim-plug
