@@ -23,11 +23,11 @@ class Parser():
         snippets = {}
         while self.linenr < self.line_max:
             line = self.lines[self.linenr]
-            if re.search('^\s*#|^\s*$', line):
+            if re.search(r'^\s*#|^\s*$', line):
                 # Skip
                 self.linenr += 1
                 continue
-            if not re.search('^\s*snippet\s+', line):
+            if not re.search(r'^\s*snippet\s+', line):
                 # Error
                 return {}
 
@@ -40,7 +40,7 @@ class Parser():
 
     def parse_one_snippet(self):
         line = self.lines[self.linenr]
-        m = re.search('^\s*snippet\s+(.*)$', line)
+        m = re.search(r'^\s*snippet\s+(.*)$', line)
         if not m:
             return {}
 
@@ -55,28 +55,28 @@ class Parser():
             self.linenr += 1
 
             line = self.lines[self.linenr]
-            m = re.search('^abbr\s+(\S+)', line)
+            m = re.search(r'^abbr\s+(\S+)', line)
             if m:
                 snippet['abbr'] = m.group(1)
                 continue
 
-            m = re.search('^alias\s+(\S+)', line)
+            m = re.search(r'^alias\s+(\S+)', line)
             if m:
                 snippet['alias'] = m.group(1)
                 continue
 
-            m = re.search("^regexp\s+'([^']+)'", line)
+            m = re.search(r"^regexp\s+'([^']+)'", line)
             if m:
                 snippet['regexp'] = m.group(1)
                 continue
 
-            m = re.search('^options\s+(\S+)', line)
+            m = re.search(r'^options\s+(\S+)', line)
             if m:
                 for option in m.group(1).split(' '):
                     snippet['options'][option] = True
                 continue
 
-            m = re.search('^\s+(.*)$', line)
+            m = re.search(r'^\s+(.*)$', line)
             if m:
                 return self.parse_text(snippet)
 
@@ -90,7 +90,7 @@ class Parser():
         text_linenr = 0
         while self.linenr < self.line_max:
             line = self.lines[self.linenr]
-            m = re.search('^\s+(.*)$', line)
+            m = re.search(r'^\s+(.*)$', line)
             if not m:
                 return snippet
 
@@ -109,7 +109,7 @@ class Parser():
         return snippet
 
     def parse_tabstop(self, line, text_linenr):
-        m = re.search('\${(\d+)}', line)
+        m = re.search(r'\${(\d+)}', line)
         if not m:
             return [{}, line]
 
@@ -120,5 +120,5 @@ class Parser():
                 'col': m.start(),
                 'default': '',
             },
-            re.sub('\${(\d+)}', '', line, count=1)
+            re.sub(r'\${(\d+)}', '', line, count=1)
         ]
