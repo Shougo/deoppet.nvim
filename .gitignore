@@ -2,3 +2,4 @@
 *.py[cod]
 doc/tags
 vim-themis
+.mypy_cache

@@ -4,25 +4,37 @@
 # License: MIT license
 # ============================================================================
 
-import neovim
-from deoppet.deoppet import Deoppet
+from importlib import find_loader
 
+if find_loader('yarp'):
+    import vim
+elif find_loader('pynvim'):
+    import pynvim
+    vim = pynvim
+else:
+    import neovim
+    vim = neovim
 
-@neovim.plugin
-class DeoppetHandlers(object):
+if hasattr(vim, 'plugin'):
+    # Neovim only
 
-    def __init__(self, vim):
-        self._vim = vim
+    from deoppet.deoppet import Deoppet
 
-    @neovim.function('_deoppet_initialize', sync=False)
-    def init_channel(self, args):
-        self._vim.vars['deoppet#_channel_id'] = self._vim.channel_id
-        self._deoppet = Deoppet(self._vim)
+    @vim.plugin
+    class DeoppetHandlers(object):
 
-    @neovim.function('_deoppet_mapping', sync=True)
-    def mapping(self, args):
-        self._deoppet.mapping(args[0])
+        def __init__(self, vim):
+            self._vim = vim
 
-    @neovim.function('_deoppet_event', sync=True)
-    def event(self, args):
-        self._deoppet.event(args[0])
+        @vim.function('_deoppet_initialize', sync=False)
+        def init_channel(self, args):
+            self._vim.vars['deoppet#_channel_id'] = self._vim.channel_id
+            self._deoppet = Deoppet(self._vim)
+
+        @vim.function('_deoppet_mapping', sync=True)
+        def mapping(self, args):
+            self._deoppet.mapping(args[0])
+
+        @vim.function('_deoppet_event', sync=True)
+        def event(self, args):
+            self._deoppet.event(args[0])
