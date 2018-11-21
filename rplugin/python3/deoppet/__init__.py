@@ -4,7 +4,7 @@
 # License: MIT license
 # ============================================================================
 
-import importlib.util import find_spec
+from importlib.util import find_spec
 
 if find_spec('yarp'):
     import vim
