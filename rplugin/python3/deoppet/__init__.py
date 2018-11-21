@@ -4,11 +4,11 @@
 # License: MIT license
 # ============================================================================
 
-from importlib import find_loader
+import importlib.util import find_spec
 
-if find_loader('yarp'):
+if find_spec('yarp'):
     import vim
-elif find_loader('pynvim'):
+elif find_spec('pynvim'):
     import pynvim
     vim = pynvim
 else:
