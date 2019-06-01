@@ -4,23 +4,27 @@
 # License: MIT license
 # ============================================================================
 
+import typing
+
 from deoppet.util import debug
+
+from pynvim import Nvim
 
 
 class Mapping():
 
-    def __init__(self, vim):
+    def __init__(self, vim: Nvim) -> None:
         self._vim = vim
         self.clear()
 
-    def debug(self, expr):
+    def debug(self, expr: typing.Any) -> None:
         return debug(self._vim, expr)
 
-    def clear(self):
+    def clear(self) -> None:
         self._ns = self._vim.call('nvim_init_mark_ns', 'deoppet')
         self._vim.current.buffer.vars['deoppet_marks'] = []
 
-    def mapping(self, name):
+    def mapping(self, name: str) -> None:
         bvars = self._vim.current.buffer.vars
         if 'deoppet_marks' not in bvars:
             bvars['deoppet_marks'] = []
@@ -37,7 +41,7 @@ class Mapping():
             return self.jump(False)
         return
 
-    def expand(self):
+    def expand(self) -> None:
         bvars = self._vim.current.buffer.vars
         snippets = bvars['deoppet_snippets']
         cur_text = self._vim.call('deoppet#util#_get_cur_text')
@@ -69,7 +73,7 @@ class Mapping():
         bvars['deoppet_marks'] = ids + bvars['deoppet_marks']
         self.cursor(linenr, col, next_text)
 
-    def jump(self, is_forward):
+    def jump(self, is_forward: bool) -> None:
         bvars = self._vim.current.buffer.vars
         if not bvars['deoppet_marks']:
             self.nop()
@@ -84,12 +88,12 @@ class Mapping():
         self.cursor(mark[1], mark[2], next_text)
         bvars['deoppet_marks'] = marks[1:] + [marks[0]]
 
-    def nop(self):
+    def nop(self) -> None:
         return self.cursor(self._vim.current.window.cursor[0],
                            self._vim.current.window.cursor[1],
                            self._vim.call('deoppet#util#_get_next_text'))
 
-    def cursor(self, linenr, col, next_text):
+    def cursor(self, linenr: int, col: int, next_text: str) -> None:
         # self.debug(next_text)
         if next_text:
             self._vim.call('cursor', [linenr, col + 1])

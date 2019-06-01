@@ -6,18 +6,21 @@
 
 import glob
 import re
+import typing
+
+from pynvim import Nvim
 
 
-def globruntime(runtimepath, path):
-    ret = []
+def globruntime(runtimepath: str, path: str) -> typing.List[str]:
+    ret: typing.List[str] = []
     for rtp in re.split(',', runtimepath):
         ret += glob.glob(rtp + '/' + path)
     return ret
 
 
-def debug(vim, expr):
+def debug(vim: Nvim, expr: typing.Any) -> None:
     if hasattr(vim, 'out_write'):
         string = (expr if isinstance(expr, str) else str(expr))
-        return vim.out_write('[denite] ' + string + '\n')
+        vim.out_write('[denite] ' + string + '\n')
     else:
         print(expr)

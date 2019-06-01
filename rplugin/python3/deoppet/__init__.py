@@ -4,6 +4,8 @@
 # License: MIT license
 # ============================================================================
 
+import typing
+
 from importlib.util import find_spec
 
 if find_spec('yarp'):
@@ -11,9 +13,7 @@ if find_spec('yarp'):
 elif find_spec('pynvim'):
     import pynvim
     vim = pynvim
-else:
-    import neovim
-    vim = neovim
+    from pynvim import Nvim
 
 if hasattr(vim, 'plugin'):
     # Neovim only
@@ -23,18 +23,18 @@ if hasattr(vim, 'plugin'):
     @vim.plugin
     class DeoppetHandlers(object):
 
-        def __init__(self, vim):
+        def __init__(self, vim: Nvim) -> None:
             self._vim = vim
 
-        @vim.function('_deoppet_initialize', sync=False)
-        def init_channel(self, args):
+        @vim.function('_deoppet_initialize', sync=False)  # type: ignore
+        def init_channel(self, args: typing.List[str]) -> None:
             self._vim.vars['deoppet#_channel_id'] = self._vim.channel_id
             self._deoppet = Deoppet(self._vim)
 
-        @vim.function('_deoppet_mapping', sync=True)
-        def mapping(self, args):
+        @vim.function('_deoppet_mapping', sync=True)  # type: ignore
+        def mapping(self, args: typing.List[str]) -> None:
             self._deoppet.mapping(args[0])
 
-        @vim.function('_deoppet_event', sync=True)
-        def event(self, args):
+        @vim.function('_deoppet_event', sync=True)  # type: ignore
+        def event(self, args: typing.List[str]) -> None:
             self._deoppet.event(args[0])

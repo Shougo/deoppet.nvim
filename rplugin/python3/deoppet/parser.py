@@ -5,22 +5,25 @@
 # ============================================================================
 
 import re
+import typing
+
+Snippet = typing.Dict[str, typing.Any]
 
 
 class Parser():
 
-    def __init__(self):
-        self.lines = []
+    def __init__(self) -> None:
+        self.lines: typing.List[str] = []
         self.linenr = 0
         self.line_max = 0
         pass
 
-    def parse(self, text):
+    def parse(self, text: str) -> Snippet:
         self.lines = text.splitlines()
         self.linenr = 0
         self.line_max = len(self.lines)
 
-        snippets = {}
+        snippets: typing.Dict[str, Snippet] = {}
         while self.linenr < self.line_max:
             line = self.lines[self.linenr]
             if re.search(r'^\s*#|^\s*$', line):
@@ -38,13 +41,13 @@ class Parser():
             snippets[snippet['trigger']] = snippet
         return snippets
 
-    def parse_one_snippet(self):
+    def parse_one_snippet(self) -> Snippet:
         line = self.lines[self.linenr]
         m = re.search(r'^\s*snippet\s+(.*)$', line)
         if not m:
             return {}
 
-        snippet = {}
+        snippet: Snippet = {}
         snippet['trigger'] = m.group(1)
         snippet['text'] = ''
         snippet['options'] = {}
@@ -86,7 +89,7 @@ class Parser():
         # Error
         return {}
 
-    def parse_text(self, snippet):
+    def parse_text(self, snippet: Snippet) -> Snippet:
         text_linenr = 0
         while self.linenr < self.line_max:
             line = self.lines[self.linenr]
@@ -108,7 +111,8 @@ class Parser():
             text_linenr += 1
         return snippet
 
-    def parse_tabstop(self, line, text_linenr):
+    def parse_tabstop(self, line: str, text_linenr: int
+                      ) -> typing.List[typing.Any]:
         m = re.search(r'\${(\d+)}', line)
         if not m:
             return [{}, line]
