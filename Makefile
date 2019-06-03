@@ -12,7 +12,7 @@ lint:
 	vint plugin
 	vint autoload
 	flake8 --version
-	flake8 rplugin/python3/deoppet
+	flake8 rplugin
 	mypy --version
 	mypy --ignore-missing-imports --strict rplugin/python3/deoppet
 

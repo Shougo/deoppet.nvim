@@ -1,12 +1,10 @@
-#=============================================================================
+# =============================================================================
 # FILE: deoppet.py
 # AUTHOR: Shougo Matsushita <Shougo.Matsu at gmail.com>
 # License: MIT license
-#=============================================================================
+# =============================================================================
 
 from .base import Base
-from deoppet.parser import Parser
-from deoppet.util import globruntime, debug
 
 
 class Source(Base):
