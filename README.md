@@ -42,7 +42,7 @@ You can enable Python3 interface with pip:
 
     pip3 install --user pynvim
 
-If you want to read the Neovim-python/python3 interface install documentation,
+If you want to read the pynvim/python3 interface install documentation,
 you should read `:help provider-python` and the Wiki.
 
 

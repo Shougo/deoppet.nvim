@@ -11,8 +11,7 @@ from importlib.util import find_spec
 if find_spec('yarp'):
     import vim
 elif find_spec('pynvim'):
-    import pynvim
-    vim = pynvim
+    import pynvim as vim
     from pynvim import Nvim
 
 if hasattr(vim, 'plugin'):
