@@ -21,6 +21,6 @@ def globruntime(runtimepath: str, path: str) -> typing.List[str]:
 def debug(vim: Nvim, expr: typing.Any) -> None:
     if hasattr(vim, 'out_write'):
         string = (expr if isinstance(expr, str) else str(expr))
-        vim.out_write('[denite] ' + string + '\n')
+        vim.out_write('[deoppet] ' + string + '\n')
     else:
         print(expr)
