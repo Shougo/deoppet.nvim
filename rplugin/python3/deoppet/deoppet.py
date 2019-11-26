@@ -18,6 +18,9 @@ class Deoppet():
 
     def __init__(self, vim: Nvim) -> None:
         self._vim = vim
+        if not self._vim.call('has', 'nvim-0.5.0'):
+            return
+
         self._parser = Parser()
         self._mapping = Mapping(self._vim)
         self._snippets: typing.Dict[str, Snippet] = {}

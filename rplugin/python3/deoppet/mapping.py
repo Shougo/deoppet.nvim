@@ -23,7 +23,7 @@ class Mapping():
     def clear(self) -> None:
         self._ns = self._vim.call('nvim_create_namespace', 'deoppet')
         bvars = self._vim.current.buffer.vars
-        if not bvars['deoppet_marks']:
+        if 'deoppet_marks' not in bvars:
             return
 
         buf = self._vim.current.buffer
