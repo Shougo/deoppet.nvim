@@ -21,7 +21,7 @@ class Mapping():
         return debug(self._vim, expr)
 
     def clear(self) -> None:
-        self._ns = self._vim.call('nvim_init_mark_ns', 'deoppet')
+        self._ns = self._vim.call('nvim_create_namespace', 'deoppet')
         self._vim.current.buffer.vars['deoppet_marks'] = []
 
     def mapping(self, name: str) -> None:
@@ -64,12 +64,13 @@ class Mapping():
         col = self._vim.call('len', cur_text + snippet['text'])
 
         ids = []
-        self._ns = self._vim.call('nvim_init_mark_ns', 'deoppet')
+        self._ns = self._vim.call('nvim_create_namespace', 'deoppet')
+        debug(self._vim, snippet['tabstops'])
         for tabstop in snippet['tabstops']:
-            ids.append(self._vim.call('nvim_buf_set_mark',
-                                      buf.number, self._ns, '',
-                                      tabstop['row'] + linenr,
-                                      tabstop['col'] + 1))
+            ids.append(self._vim.call('nvim_buf_set_extmark',
+                                      buf.number, self._ns, 0,
+                                      tabstop['row'] + linenr - 1,
+                                      tabstop['col'], {}))
         bvars['deoppet_marks'] = ids + bvars['deoppet_marks']
         self.cursor(linenr, col, next_text)
 
@@ -80,12 +81,10 @@ class Mapping():
             return
         buf = self._vim.current.buffer
         marks = bvars['deoppet_marks']
-        mark = self._vim.call('nvim_buf_lookup_mark',
+        mark = self._vim.call('nvim_buf_get_extmark_by_id',
                               buf.number, self._ns, marks[0])
-        # Insert mode offset
-        mark[2] -= 1
-        next_text = buf[mark[1]-1][mark[2]:]
-        self.cursor(mark[1], mark[2], next_text)
+        next_text = buf[mark[0]][mark[1]:]
+        self.cursor(mark[0] + 1, mark[1], next_text)
         bvars['deoppet_marks'] = marks[1:] + [marks[0]]
 
     def nop(self) -> None:
