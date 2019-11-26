@@ -9,8 +9,7 @@ provides the snippet expansion.
 
 ## Installation
 
-**Note:** deoppet requires Neovim(latest is recommended) with Python3 enabled
-and https://github.com/neovim/neovim/pull/8416.
+**Note:** deoppet requires Neovim(0.5.0+) with Python3.
 See [requirements](#requirements) if you aren't sure whether you have this.
 
 1. Extract the files and put them in your Neovim directory
