@@ -22,7 +22,15 @@ class Mapping():
 
     def clear(self) -> None:
         self._ns = self._vim.call('nvim_create_namespace', 'deoppet')
-        self._vim.current.buffer.vars['deoppet_marks'] = []
+        bvars = self._vim.current.buffer.vars
+        if not bvars['deoppet_marks']:
+            return
+
+        buf = self._vim.current.buffer
+        for mark in bvars['deoppet_marks']:
+            self._vim.call('nvim_buf_del_extmark', 0, self._ns, mark)
+
+        bvars['deoppet_marks'] = []
 
     def mapping(self, name: str) -> None:
         bvars = self._vim.current.buffer.vars
