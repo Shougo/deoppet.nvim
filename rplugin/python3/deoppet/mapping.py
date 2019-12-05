@@ -26,7 +26,6 @@ class Mapping():
         if 'deoppet_marks' not in bvars:
             return
 
-        buf = self._vim.current.buffer
         for mark in bvars['deoppet_marks']:
             self._vim.call('nvim_buf_del_extmark', 0, self._ns, mark)
 
