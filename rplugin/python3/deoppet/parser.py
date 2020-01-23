@@ -99,14 +99,15 @@ class Parser():
             line = self._lines[self._linenr]
             if not line:
                 # Skip
-                snippet['text'] += '\n'
+                if snippet['text']:
+                    snippet['text'] += '\n'
                 self._linenr += 1
                 text_linenr += 1
                 continue
 
             m = re.search(r'^\s+(.*)$', line)
             if not m:
-                return snippet
+                break
 
             # Substitute tabstops
             line = m.group(1)
@@ -117,9 +118,14 @@ class Parser():
 
                 snippet['tabstops'].append(tabstop)
 
+            if snippet['text']:
+                snippet['text'] += '\n'
             snippet['text'] += line
             self._linenr += 1
             text_linenr += 1
+
+        # Chomp the last "\n"
+        snippet['text'] = snippet['text'][:-1]
         return snippet
 
     def parse_tabstop(self, line: str, text_linenr: int
