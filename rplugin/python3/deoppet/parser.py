@@ -16,7 +16,6 @@ class Parser():
         self.lines: typing.List[str] = []
         self.linenr = 0
         self.line_max = 0
-        pass
 
     def parse(self, text: str) -> Snippet:
         self.lines = text.splitlines()

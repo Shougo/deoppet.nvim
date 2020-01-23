@@ -21,7 +21,6 @@ class Deoppet():
         if not self._vim.call('has', 'nvim-0.5.0'):
             return
 
-        self._parser = Parser()
         self._mapping = Mapping(self._vim)
         self._options = self._vim.call('deoppet#custom#_get')['option']
 
@@ -34,7 +33,10 @@ class Deoppet():
         return self._mapping.mapping(name)
 
     def event(self, name: str) -> None:
-        return self._mapping.clear()
+        if name == 'FileType':
+            return self._load_snippets()
+        else:
+            return self._mapping.clear()
 
     def _load_snippets(self) -> None:
         snippets: typing.Dict[str, Snippet] = {}
@@ -46,5 +48,7 @@ class Deoppet():
                     f'{dir}/{filetype}.snip') + glob.glob(f'{dir}/_.snip'):
                 debug(self._vim, filename)
                 with open(filename) as f:
-                    snippets.update(self._parser.parse(f.read()))
+                    parser = Parser()
+                    snippets.update(parser.parse(f.read()))
+        debug(self._vim, snippets)
         self._vim.current.buffer.vars['deoppet_snippets'] = snippets
