@@ -21,13 +21,14 @@ class Mapping():
         return debug(self._vim, expr)
 
     def clear(self) -> None:
-        self._ns = self._vim.call('nvim_create_namespace', 'deoppet')
-        bvars = self._vim.current.buffer.vars
+        self._ns = self._vim.api.create_namespace('deoppet')
+        buf = self._vim.current.buffer
+        bvars = buf.vars
         if 'deoppet_marks' not in bvars:
             return
 
         for mark in bvars['deoppet_marks']:
-            self._vim.call('nvim_buf_del_extmark', 0, self._ns, mark)
+            buf.api.del_extmark(0, self._ns, mark)
 
         bvars['deoppet_marks'] = []
 
@@ -80,13 +81,12 @@ class Mapping():
         col = self._vim.call('len', cur_text + texts[0])
 
         ids = []
-        self._ns = self._vim.call('nvim_create_namespace', 'deoppet')
+        self._ns = self._vim.api.create_namespace('deoppet')
         debug(self._vim, snippet['tabstops'])
         for tabstop in snippet['tabstops']:
-            ids.append(self._vim.call('nvim_buf_set_extmark',
-                                      buf.number, self._ns, 0,
-                                      tabstop['row'] + linenr - 1,
-                                      tabstop['col'], {}))
+            ids.append(buf.api.set_extmark(
+                self._ns, 0,
+                tabstop['row'] + linenr - 1, tabstop['col'], {}))
         bvars['deoppet_marks'] = ids + bvars['deoppet_marks']
         self.cursor(linenr, col, next_text)
 
@@ -97,8 +97,7 @@ class Mapping():
             return
         buf = self._vim.current.buffer
         marks = bvars['deoppet_marks']
-        mark = self._vim.call('nvim_buf_get_extmark_by_id',
-                              buf.number, self._ns, marks[0])
+        mark = self._vim.buf.api.get_ext_mark_id(self._ns, marks[0])
         next_text = buf[mark[0]][mark[1]:]
         self.cursor(mark[0] + 1, mark[1], next_text)
         bvars['deoppet_marks'] = marks[1:] + [marks[0]]
