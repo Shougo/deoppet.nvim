@@ -4,6 +4,40 @@
 " License: MIT license
 "=============================================================================
 
+let s:is_windows = has('win32') || has('win64')
+let s:is_mac = !s:is_windows && !has('win32unix')
+      \ && (has('mac') || has('macunix') || has('gui_macvim') ||
+      \   (!isdirectory('/proc') && executable('sw_vers')))
+
+function! deoppet#util#print_error(string) abort
+  echohl Error | echomsg '[deoppet] '
+        \ . deoppet#util#string(a:string) | echohl None
+endfunction
+function! deoppet#util#print_warning(string) abort
+  echohl WarningMsg | echomsg '[deoppet] '
+        \ . deoppet#util#string(a:string) | echohl None
+endfunction
+function! deoppet#util#print_debug(string) abort
+  echomsg '[deoppet] ' . deoppet#util#string(a:string)
+endfunction
+function! deoppet#util#print_message(string) abort
+  echo '[deoppet] ' . deoppet#util#string(a:string)
+endfunction
+function! deoppet#util#is_windows() abort
+  return s:is_windows
+endfunction
+
+function! deoppet#util#convert2list(expr) abort
+  return type(a:expr) ==# type([]) ? a:expr : [a:expr]
+endfunction
+function! deoppet#util#string(expr) abort
+  return type(a:expr) ==# type('') ? a:expr : string(a:expr)
+endfunction
+
+function! deoppet#util#has_yarp() abort
+  return !has('nvim') || get(g:, 'deoppet#enable_yarp', 0)
+endfunction
+
 function! deoppet#util#_get_cur_text() abort
   return
         \ (mode() ==# 'i' ? (col('.')-1) : col('.')) >= len(getline('.')) ?

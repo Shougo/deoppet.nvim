@@ -25,7 +25,7 @@ if hasattr(vim, 'plugin'):
         def __init__(self, vim: Nvim) -> None:
             self._vim = vim
 
-        @vim.function('_deoppet_initialize', sync=False)  # type: ignore
+        @vim.function('_deoppet_init', sync=False)  # type: ignore
         def init_channel(self, args: typing.List[str]) -> None:
             self._vim.vars['deoppet#_channel_id'] = self._vim.channel_id
             self._deoppet = Deoppet(self._vim)

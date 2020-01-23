@@ -48,6 +48,11 @@ INTERFACE						*deoppet-interface*
 ------------------------------------------------------------------------------
 FUNCTIONS 						*deoppet-functions*
 
+							*deoppet#initialize()*
+deoppet#initialize()
+		Initialize deoppet plugin.
+		Note: You need to call the function before use deoppet plugin.
+
 
 						*deoppet#custom#option()*
 deoppet#custom#option({option-name}, {value})

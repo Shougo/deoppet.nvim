@@ -14,7 +14,7 @@ endfunction
 
 function! deoppet#custom#_init() abort
   let s:custom = {}
-  let s:custom.option = {}
+  let s:custom.option = deoppet#init#_options()
 endfunction
 
 function! deoppet#custom#option(name_or_dict, ...) abort
