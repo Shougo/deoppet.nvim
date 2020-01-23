@@ -56,4 +56,7 @@ If Deoppet was installed prior to Python support being added to Neovim,
 ## Configuration Examples
 
 ```vim
+	call deoppet#initialize()
+	call deoppet#custom#option('snippets_dirs',
+	\ globpath(&runtimepath, 'neosnippets', 1, 1))
 ```

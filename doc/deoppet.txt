@@ -61,20 +61,28 @@ deoppet#custom#option({dict})
 		buffer.
 		If {dict} is available, the key is {option-name} and the value
 		is {value}.
-                Note: The all options are in |deoppet-options|. >
+                Note: The all options are in |deoppet-options|.
 
-	call deoppet#custom#option({
-	      \ })
-<
 ------------------------------------------------------------------------------
 KEY MAPPINGS 						*deoppet-key-mappings*
 
 ------------------------------------------------------------------------------
 OPTIONS							*deoppet-options*
 
+						*deoppet-options-snippets_dir*
+snippets_dirs
+		Snippets directories list.
+		Note: deoppet does not include any of default snippets.
+		To load snippets, you need to set the option.
+
+		Default: []
+
 ==============================================================================
 EXAMPLES						*deoppet-examples*
 >
+	call deoppet#initialize()
+	call deoppet#custom#option('snippets_dirs',
+	\ globpath(&runtimepath, 'neosnippets', 1, 1))
 <
 ==============================================================================
 FREQUENTLY ASKED QUESTIONS (FAQ)			*deoppet-faq*
