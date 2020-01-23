@@ -1,41 +1,21 @@
 import sys
 print(sys.path)
 from deoppet.parser import Parser
+from unittest.mock import Mock
 
 def test_parse_success():
-    parser = Parser()
+    vim = Mock()
+    parser = Parser(vim)
 
     test_snippet0 = """
 """
+
+    assert parser.parse(test_snippet0) == {}
 
     test_snippet1 = """
 snippet    foo
    foobar
 """
-
-    test_snippet2 = """
-snippet    foo
-   foobar
-
-snippet    bar
-   baz
-"""
-
-    test_snippet3 = """
-snippet    foo
-abbr       bar
-alias      baz
-regexp     '^% '
-options    word
-   foobar
-"""
-
-    test_snippet4 = """
-snippet    foo
-   foobar ${1} ${2}
-"""
-
-    assert parser.parse(test_snippet0) == {}
 
     assert parser.parse(test_snippet1) == {
         'foo': {
@@ -45,6 +25,14 @@ snippet    foo
             'tabstops': [],
         }
     }
+
+    test_snippet2 = """
+snippet    foo
+   foobar
+
+snippet    bar
+   baz
+"""
 
     assert parser.parse(test_snippet2) == {
         'foo': {
@@ -61,6 +49,15 @@ snippet    foo
         }
     }
 
+    test_snippet3 = """
+snippet    foo
+abbr       bar
+alias      baz
+regexp     '^% '
+options    word
+   foobar
+"""
+
     assert parser.parse(test_snippet3) == {
         'foo': {
             'trigger': 'foo',
@@ -72,6 +69,11 @@ snippet    foo
             'tabstops': [],
         }
     }
+
+    test_snippet4 = """
+snippet    foo
+   foobar ${1} ${2}
+"""
 
     assert parser.parse(test_snippet4) == {
         'foo': {
@@ -85,8 +87,41 @@ snippet    foo
         }
     }
 
+    test_snippet5 = """
+snippet     if
+abbr        if endif
+options     head
+    if condition
+      TARGET
+    endif
+
+snippet     elseif
+options     head
+    elseif condition
+        TARGET
+"""
+
+    assert parser.parse(test_snippet5) == {
+        'if': {
+            'abbr': 'if endif',
+            'trigger': 'if',
+            'text': 'if condition\nTARGET\nendif',
+            'options': {'head': True},
+            'tabstops': [
+            ],
+        },
+        'elseif': {
+            'trigger': 'elseif',
+            'text': 'elseif condition\nTARGET',
+            'options': {'head': True},
+            'tabstops': [
+            ],
+        }
+    }
+
 def test_parse_error():
-    parser = Parser()
+    vim = Mock()
+    parser = Parser(vim)
 
     test_snippet0 = """
 snippet bar

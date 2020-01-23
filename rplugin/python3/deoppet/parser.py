@@ -62,7 +62,7 @@ class Parser():
             self._linenr += 1
 
             line = self._lines[self._linenr]
-            m = re.search(r'^abbr\s+(\S+)', line)
+            m = re.search(r'^abbr\s+(.*)', line)
             if m:
                 snippet['abbr'] = m.group(1)
                 continue
@@ -125,7 +125,8 @@ class Parser():
             text_linenr += 1
 
         # Chomp the last "\n"
-        snippet['text'] = snippet['text'][:-1]
+        if snippet['text'] and snippet['text'][-1] == '\n':
+            snippet['text'] = snippet['text'][:-1]
         return snippet
 
     def parse_tabstop(self, line: str, text_linenr: int
