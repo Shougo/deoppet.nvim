@@ -81,8 +81,8 @@ snippet    foo
             'text': 'foobar  ',
             'options': {},
             'tabstops': [
-                {'number': 1, 'row': 0, 'col': 7, 'default': ''},
-                {'number': 2, 'row': 0, 'col': 8, 'default': ''},
+                {'number': 1, 'row': 0, 'col': 7, 'default': '', 'comment': ''},
+                {'number': 2, 'row': 0, 'col': 8, 'default': '', 'comment': ''},
             ],
         }
     }
@@ -91,8 +91,8 @@ snippet    foo
 snippet     if
 abbr        if endif
 options     head
-    if condition
-      TARGET
+    if ${1:#:condition}
+      ${0:TARGET}
     endif
 
 snippet     elseif
@@ -105,9 +105,11 @@ options     head
         'if': {
             'abbr': 'if endif',
             'trigger': 'if',
-            'text': 'if condition\nTARGET\nendif',
+            'text': 'if \n\nendif',
             'options': {'head': True},
             'tabstops': [
+                {'number': 1, 'row': 0, 'col': 3, 'default': '', 'comment': ''},
+                {'number': 0, 'row': 1, 'col': 0, 'default': '', 'comment': ''},
             ],
         },
         'elseif': {
