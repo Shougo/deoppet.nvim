@@ -66,6 +66,21 @@ deoppet#custom#option({dict})
 ------------------------------------------------------------------------------
 KEY MAPPINGS 						*deoppet-key-mappings*
 
+						*i_<Plug>(deoppet_expand)*
+i_<Plug>(deoppet_expand)
+		Expand a snippet in current cursor position. It only takes
+		effect if there is a snippet text to expand.
+
+					*i_<Plug>(deoppet_jump_backward)*
+i_<Plug>(deoppet_jump_backward)
+		Jump to the previous placeholder key. It does not expand any
+		snippets.
+
+					*i_<Plug>(deoppet_jump_forward)*
+i_<Plug>(deoppet_jump_forward)
+		Jump to the next placeholder key. It does not expand any
+		snippets.
+
 ------------------------------------------------------------------------------
 OPTIONS							*deoppet-options*
 
@@ -80,6 +95,10 @@ snippets_dirs
 ==============================================================================
 EXAMPLES						*deoppet-examples*
 >
+	imap <C-k>  <Plug>(deoppet_expand)
+	imap <C-f>  <Plug>(deoppet_jump_forward)
+	imap <C-b>  <Plug>(deoppet_jump_backward)
+
 	call deoppet#initialize()
 	call deoppet#custom#option('snippets_dirs',
 	\ globpath(&runtimepath, 'neosnippets', 1, 1))
