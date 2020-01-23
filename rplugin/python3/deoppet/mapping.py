@@ -54,6 +54,7 @@ class Mapping():
         cur_text = self._vim.call('deoppet#util#_get_cur_text')
         trigger = self._vim.call('deoppet#util#_get_cursor_snippet',
                                  snippets, cur_text)
+        # debug(self._vim, trigger)
         if not trigger:
             return
 

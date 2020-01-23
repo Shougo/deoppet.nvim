@@ -11,10 +11,6 @@ function! deoppet#mapping#_init() abort
       \ <SID>trigger('jump_forward')
   inoremap <silent><expr> <Plug>(deoppet_jump_backward)
       \ <SID>trigger('jump_backward')
-
-  " Test
-  imap <C-k>  <Plug>(deoppet_expand)
-  imap <C-z>  <Plug>(deoppet_jump_forward)
 endfunction
 
 function! s:pre_trigger() abort
