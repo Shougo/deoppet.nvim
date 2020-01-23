@@ -74,7 +74,8 @@ class Mapping():
         if len(texts) > 1:
             lastnr = linenr + len(texts) - 2
             buf[linenr:lastnr - 1] = texts[1:-1]
-            buf[lastnr] = texts[-1] + buf[lastnr]
+            buf[lastnr + 1:] = buf[lastnr:]
+            buf[lastnr] = texts[-1]
 
         col = self._vim.call('len', cur_text + texts[0])
 
