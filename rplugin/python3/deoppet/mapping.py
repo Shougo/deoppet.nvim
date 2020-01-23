@@ -68,8 +68,15 @@ class Mapping():
         # debug(self._vim, cur_text)
         # debug(self._vim, snippet['trigger'])
         # debug(self._vim, next_text)
-        buf[linenr-1] = cur_text + snippet['text'] + next_text
-        col = self._vim.call('len', cur_text + snippet['text'])
+
+        texts = snippet['text'].split('\n')
+        buf[linenr-1] = cur_text + texts[0] + next_text
+        if len(texts) > 1:
+            lastnr = linenr + len(texts) - 2
+            buf[linenr : lastnr - 1] = texts[1:-1]
+            buf[lastnr] = texts[-1] + buf[lastnr]
+
+        col = self._vim.call('len', cur_text + texts[0])
 
         ids = []
         self._ns = self._vim.call('nvim_create_namespace', 'deoppet')
