@@ -71,36 +71,55 @@ class Mapping():
         # debug(self._vim, next_text)
 
         texts = snippet['text'].split('\n')
-        buf[linenr-1] = cur_text + texts[0] + next_text
+        buf[linenr - 1] = cur_text + texts[0] + next_text
         if len(texts) > 1:
             lastnr = linenr + len(texts) - 2
             buf[linenr:lastnr - 1] = texts[1:-1]
             buf[lastnr + 1:] = buf[lastnr:]
-            buf[lastnr] = texts[-1]
+            if len(buf) > lastnr:
+                buf[lastnr] = texts[-1]
+            else:
+                buf.append(texts[-1])
 
         col = self._vim.call('len', cur_text + texts[0])
 
         ids = []
         self._ns = self._vim.api.create_namespace('deoppet')
-        debug(self._vim, snippet['tabstops'])
         for tabstop in snippet['tabstops']:
             ids.append(buf.api.set_extmark(
                 self._ns, 0,
                 tabstop['row'] + linenr - 1, tabstop['col'], {}))
-        bvars['deoppet_marks'] = ids + bvars['deoppet_marks']
+        bvars['deoppet_marks'] = ids + bvars['deoppet_marks'][1:]
+        bvars['deoppet_mark_pos'] = 0
         self.cursor(linenr, col, next_text)
+
+        # Jump forward
+        return self.jump(True)
 
     def jump(self, is_forward: bool) -> None:
         bvars = self._vim.current.buffer.vars
         if not bvars['deoppet_marks']:
             self.nop()
             return
+
         buf = self._vim.current.buffer
         marks = bvars['deoppet_marks']
-        mark = self._vim.buf.api.get_ext_mark_id(self._ns, marks[0])
+        mark_id = marks[bvars['deoppet_mark_pos']]
+        mark = buf.api.get_extmark_by_id(self._ns, mark_id)
         next_text = buf[mark[0]][mark[1]:]
         self.cursor(mark[0] + 1, mark[1], next_text)
-        bvars['deoppet_marks'] = marks[1:] + [marks[0]]
+
+        # Update position
+        next_pos = bvars['deoppet_mark_pos']
+        if is_forward:
+            next_pos += 1
+        else:
+            next_pos -= 1
+        if next_pos < 0:
+            next_pos = len(marks) - 1
+        elif next_pos >= len(marks):
+            next_pos = 0
+        bvars['deoppet_mark_pos'] = next_pos
 
     def nop(self) -> None:
         return self.cursor(self._vim.current.window.cursor[0],
