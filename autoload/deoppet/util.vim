@@ -45,11 +45,11 @@ function! deoppet#util#_get_cur_text() abort
         \      matchstr(getline('.'),
         \         '^.*\%' . col('.') . 'c' . (mode() ==# 'i' ? '' : '.'))
 endfunction
-function! deoppet#util#_get_next_text() abort "{{{
+function! deoppet#util#_get_next_text() abort
   return getline('.')[len(deoppet#util#_get_cur_text()) :]
-endfunction"}}}
+endfunction
 
-function! deoppet#util#_get_cursor_snippet(snippets, cur_text) abort "{{{
+function! deoppet#util#_get_cursor_snippet(snippets, cur_text) abort
   let cur_word = matchstr(a:cur_text, '\S\+$')
   if cur_word !=# '' && has_key(a:snippets, cur_word)
       return cur_word
@@ -65,4 +65,20 @@ function! deoppet#util#_get_cursor_snippet(snippets, cur_text) abort "{{{
   endwhile
 
   return cur_word
-endfunction"}}}
+endfunction
+
+function! deoppet#util#_select_text(text) abort
+  " Select default value.
+  let len = len(a:text) - 1
+  if &l:selection ==# 'exclusive'
+    let len += 1
+  endif
+
+  let mode = mode()
+
+  stopinsert
+
+  normal! v
+  call cursor(0, col('.') + (mode ==# 'i' ? len + 1 : len))
+  execute 'normal! ' "\<C-g>"
+endfunction

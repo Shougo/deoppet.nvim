@@ -4,6 +4,7 @@
 # License: MIT license
 # ============================================================================
 
+import copy
 import typing
 
 from deoppet.util import debug
@@ -24,18 +25,20 @@ class Mapping():
         self._ns = self._vim.api.create_namespace('deoppet')
         buf = self._vim.current.buffer
         bvars = buf.vars
-        if 'deoppet_marks' not in bvars:
+        if 'deoppet_tabstops' not in bvars:
             return
 
-        for mark in bvars['deoppet_marks']:
-            buf.api.del_extmark(0, self._ns, mark)
+        for tabstop in bvars['deoppet_tabstops']:
+            buf.api.del_extmark(0, self._ns, tabstop['id'])
 
-        bvars['deoppet_marks'] = []
+        bvars['deoppet_tabstops'] = []
+        bvars['deoppet_mark_pos'] = 0
+        bvars['deoppet_snippet'] = {}
 
     def mapping(self, name: str) -> None:
         bvars = self._vim.current.buffer.vars
-        if 'deoppet_marks' not in bvars:
-            bvars['deoppet_marks'] = []
+        if 'deoppet_tabstops' not in bvars:
+            bvars['deoppet_tabstops'] = []
         if 'deoppet_snippets' not in bvars:
             return
 
@@ -83,14 +86,19 @@ class Mapping():
 
         col = self._vim.call('len', cur_text + texts[0])
 
-        ids = []
+        tabstops = []
         self._ns = self._vim.api.create_namespace('deoppet')
-        for tabstop in snippet['tabstops']:
-            ids.append(buf.api.set_extmark(
+        for tabstop in copy.deepcopy(snippet['tabstops']):
+            mark_id = buf.api.set_extmark(
                 self._ns, 0,
-                tabstop['row'] + linenr - 1, tabstop['col'], {}))
-        bvars['deoppet_marks'] = ids + bvars['deoppet_marks'][1:]
+                tabstop['row'] + linenr - 1, tabstop['col'], {})
+            tabstop['id'] = mark_id
+            tabstops.append(tabstop)
+
+        bvars['deoppet_tabstops'] = tabstops
         bvars['deoppet_mark_pos'] = 0
+        bvars['deoppet_snippet'] = snippet
+
         self.cursor(linenr, col, next_text)
 
         # Jump forward
@@ -98,26 +106,35 @@ class Mapping():
 
     def jump(self, is_forward: bool) -> None:
         bvars = self._vim.current.buffer.vars
-        if not bvars['deoppet_marks']:
+        if not bvars['deoppet_tabstops']:
             self.nop()
             return
 
         buf = self._vim.current.buffer
-        marks = bvars['deoppet_marks']
-        mark_id = marks[bvars['deoppet_mark_pos']]
+        tabstops = bvars['deoppet_tabstops']
+        tabstop = tabstops[bvars['deoppet_mark_pos']]
+        mark_id = tabstop['id']
         mark = buf.api.get_extmark_by_id(self._ns, mark_id)
         next_text = buf[mark[0]][mark[1]:]
         self.cursor(mark[0] + 1, mark[1], next_text)
 
+        # Default
+        pos = bvars['deoppet_mark_pos']
+        if tabstop['default']:
+            cur_text = buf[mark[0]][: mark[1]]
+            next_text = self._vim.call('deoppet#util#_get_next_text')
+            buf[mark[0]] = cur_text + tabstop['default'] + next_text
+            self._vim.call('deoppet#util#_select_text', tabstop['default'])
+
         # Update position
-        next_pos = bvars['deoppet_mark_pos']
+        next_pos = pos
         if is_forward:
             next_pos += 1
         else:
             next_pos -= 1
         if next_pos < 0:
-            next_pos = len(marks) - 1
-        elif next_pos >= len(marks):
+            next_pos = len(tabstops) - 1
+        elif next_pos >= len(tabstops):
             next_pos = 0
         bvars['deoppet_mark_pos'] = next_pos
 
