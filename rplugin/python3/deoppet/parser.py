@@ -131,17 +131,20 @@ class Parser():
 
     def parse_tabstop(self, line: str, text_linenr: int
                       ) -> typing.List[typing.Any]:
-        pattern = r'\${((\d+)(:[^}]*|:#:[^}]*|TARGET)?)}'
+        pattern = r'\${((\d+)(:([^}]*|:#:[^}]*|TARGET))?)}'
         m = re.search(pattern, line)
         if not m:
             return [{}, line]
 
+        default = m.group(4)
+        if not default:
+            default = ''
         return [
             {
                 'number': int(m.group(2)),
                 'row': text_linenr,
                 'col': m.start(),
-                'default': '',
+                'default': default,
                 'comment': '',
             },
             re.sub(pattern, '', line, count=1)

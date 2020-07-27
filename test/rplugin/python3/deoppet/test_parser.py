@@ -108,8 +108,14 @@ options     head
             'text': 'if \n\nendif',
             'options': {'head': True},
             'tabstops': [
-                {'number': 1, 'row': 0, 'col': 3, 'default': '', 'comment': ''},
-                {'number': 0, 'row': 1, 'col': 0, 'default': '', 'comment': ''},
+                {
+                    'number': 1, 'row': 0, 'col': 3,
+                    'default': '#:condition', 'comment': ''
+                 },
+                {
+                    'number': 0, 'row': 1, 'col': 0,
+                    'default': 'TARGET', 'comment': ''
+                },
             ],
         },
         'elseif': {
