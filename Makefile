@@ -1,11 +1,10 @@
-PATH := ./vim-themis/bin:$(PATH)
-export THEMIS_VIM  := nvim
-export THEMIS_ARGS := -e -s --headless
-export THEMIS_HOME := ./vim-themis
+PATH := $(HOME)/.local/bin:$(PATH)
 
+install:
+	pip3 install --upgrade -r test/requirements.txt
 
-install: vim-themis
-	pip install --upgrade -r test/requirements.txt
+install-user:
+	pip3 install --user --upgrade -r test/requirements.txt
 
 lint:
 	vint --version
@@ -14,15 +13,10 @@ lint:
 	flake8 --version
 	flake8 rplugin
 	mypy --version
-	mypy --ignore-missing-imports --strict rplugin/python3/deoppet
+	mypy --ignore-missing-imports --follow-imports=skip --strict rplugin/python3/deoppet
 
 test:
-	themis --version
-	themis test/autoload/*
 	pytest --version
-	pytest -vv
-
-vim-themis:
-	git clone https://github.com/thinca/vim-themis vim-themis
+	pytest
 
 .PHONY: install lint test

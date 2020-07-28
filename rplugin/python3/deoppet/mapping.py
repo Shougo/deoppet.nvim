@@ -82,15 +82,15 @@ class Mapping():
         cursor = self._vim.current.window.cursor
         linenr = cursor[0]
         col = cursor[1]
-        #debug(self._vim, col)
-        #debug(self._vim, len(cur_text))
+        # debug(self._vim, col)
+        # debug(self._vim, len(cur_text))
         buf = self._vim.current.buffer
         prev_text = cur_text[: len(cur_text) - len(trigger)]
         next_text = self._vim.call('deoppet#util#_get_next_text')
 
-        #debug(self._vim, cur_text)
-        #debug(self._vim, snippet['trigger'])
-        #debug(self._vim, next_text)
+        # debug(self._vim, cur_text)
+        # debug(self._vim, snippet['trigger'])
+        # debug(self._vim, next_text)
 
         texts = snippet['text'].split('\n')
         buf[linenr - 1] = prev_text + texts[0] + next_text

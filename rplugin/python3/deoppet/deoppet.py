@@ -9,7 +9,7 @@ import typing
 
 from deoppet.parser import Parser, Snippet
 from deoppet.mapping import Mapping
-from deoppet.util import debug
+# from deoppet.util import debug
 
 from pynvim import Nvim
 
@@ -45,14 +45,14 @@ class Deoppet():
             'getbufvar', buf.number, '&filetype')
         if not filetype:
             filetype = 'nothing'
-        #debug(self._vim, filetype)
-        #debug(self._vim, self._vim.current.buffer.number)
+        # debug(self._vim, filetype)
+        # debug(self._vim, self._vim.current.buffer.number)
         for dir in self._options['snippets_dirs']:
             for filename in glob.glob(
                     f'{dir}/{filetype}.snip') + glob.glob(f'{dir}/_.snip'):
-                #debug(self._vim, filename)
+                # debug(self._vim, filename)
                 with open(filename) as f:
                     parser = Parser(self._vim)
                     snippets.update(parser.parse(f.read()))
-        #debug(self._vim, snippets)
+        # debug(self._vim, snippets)
         buf.vars['deoppet_snippets'] = snippets
