@@ -68,7 +68,6 @@ function! deoppet#util#_get_cursor_snippet(snippets, cur_text) abort
 endfunction
 
 function! deoppet#util#_select_text(text) abort
-  " Select default value.
   let len = len(a:text) - 1
   if &l:selection ==# 'exclusive'
     let len += 1
@@ -76,9 +75,19 @@ function! deoppet#util#_select_text(text) abort
 
   let mode = mode()
 
+  " Insert the text
+  execute 'normal!' ((col('.') == col('$') ? 'A' : 'i') . a:text)
   stopinsert
+  execute 'normal!' len . 'h'
 
+  " Select the text
   normal! v
   call cursor(0, col('.') + (mode ==# 'i' ? len + 1 : len))
+  execute 'normal! ' "\<C-g>"
+endfunction
+function! deoppet#util#_select_pos(pos) abort
+  " Select to the pos
+  normal! v
+  call cursor(0, a:pos[1] + 1)
   execute 'normal! ' "\<C-g>"
 endfunction

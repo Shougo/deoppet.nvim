@@ -11,6 +11,10 @@ function! deoppet#mapping#_init() abort
       \ <SID>trigger('jump_forward')
   inoremap <silent><expr> <Plug>(deoppet_jump_backward)
       \ <SID>trigger('jump_backward')
+  snoremap <silent><expr> <Plug>(deoppet_jump_forward)
+      \ <SID>trigger('jump_forward')
+  snoremap <silent><expr> <Plug>(deoppet_jump_backward)
+      \ <SID>trigger('jump_backward')
 endfunction
 
 function! s:pre_trigger() abort

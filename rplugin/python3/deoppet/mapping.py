@@ -29,7 +29,8 @@ class Mapping():
             return
 
         for tabstop in bvars['deoppet_tabstops']:
-            buf.api.del_extmark(0, self._ns, tabstop['id'])
+            buf.api.del_extmark(self._ns, tabstop['id_begin'])
+            buf.api.del_extmark(self._ns, tabstop['id_end'])
 
         bvars['deoppet_tabstops'] = []
         bvars['deoppet_mark_pos'] = 0
@@ -53,6 +54,8 @@ class Mapping():
         return
 
     def expand(self) -> None:
+        self.clear()
+
         bvars = self._vim.current.buffer.vars
         snippets = bvars['deoppet_snippets']
         cur_text = self._vim.call('deoppet#util#_get_cur_text')
@@ -92,7 +95,8 @@ class Mapping():
             mark_id = buf.api.set_extmark(
                 self._ns, 0,
                 tabstop['row'] + linenr - 1, tabstop['col'], {})
-            tabstop['id'] = mark_id
+            tabstop['id_begin'] = mark_id
+            tabstop['id_end'] = mark_id
             tabstops.append(tabstop)
 
         bvars['deoppet_tabstops'] = tabstops
@@ -113,18 +117,36 @@ class Mapping():
         buf = self._vim.current.buffer
         tabstops = bvars['deoppet_tabstops']
         tabstop = tabstops[bvars['deoppet_mark_pos']]
-        mark_id = tabstop['id']
-        mark = buf.api.get_extmark_by_id(self._ns, mark_id)
-        next_text = buf[mark[0]][mark[1]:]
-        self.cursor(mark[0] + 1, mark[1], next_text)
+        mark_begin = buf.api.get_extmark_by_id(self._ns, tabstop['id_begin'])
+        if not mark_begin or mark_begin[0] >= len(buf):
+            # Overflow
+            return
+        next_text = buf[mark_begin[0]][mark_begin[1]:]
+        self.cursor(mark_begin[0] + 1, mark_begin[1], next_text)
 
         # Default
         pos = bvars['deoppet_mark_pos']
         if tabstop['default']:
-            cur_text = buf[mark[0]][: mark[1]]
-            next_text = self._vim.call('deoppet#util#_get_next_text')
-            buf[mark[0]] = cur_text + tabstop['default'] + next_text
-            self._vim.call('deoppet#util#_select_text', tabstop['default'])
+            mark_end = buf.api.get_extmark_by_id(
+                self._ns, tabstop['id_end'])
+            debug(self._vim, mark_begin)
+            debug(self._vim, mark_end)
+            if mark_begin == mark_end:
+                self._vim.call('deoppet#util#_select_text',
+                               tabstop['default'])
+
+                # Update marks
+                buf.api.del_extmark(self._ns, tabstop['id_begin'])
+                buf.api.del_extmark(self._ns, tabstop['id_end'])
+                tabstop['id_begin'] = buf.api.set_extmark(
+                    self._ns, 0, mark_begin[0], mark_begin[1], {})
+                tabstop['id_end'] = buf.api.set_extmark(
+                    self._ns, 0, mark_begin[0],
+                    self._vim.call('col', '.') - 1, {})
+                bvars['deoppet_tabstops'] = tabstops
+            else:
+                # Select begin to end.
+                self._vim.call('deoppet#util#_select_pos', mark_end)
 
         # Update position
         next_pos = pos
