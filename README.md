@@ -1,6 +1,8 @@
 deoppet.nvim
 ============
 
+[![Join the chat at https://gitter.im/Shougo/deoppet.nvim](https://badges.gitter.im/Shougo/deoppet.nvim.svg)](https://gitter.im/Shougo/deoppet.nvim?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Warning: This is the vaporware!  It is not implemented yet.
 
 Deoppet is the abbreviation of "dark powered neo-snippet".  It
