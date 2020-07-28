@@ -76,14 +76,18 @@ function! deoppet#util#_select_text(text) abort
   let mode = mode()
 
   " Insert the text
-  execute 'normal!' ((col('.') == col('$') ? 'A' : 'i') . a:text)
-  stopinsert
+  call deoppet#util#_insert_text(a:text)
   execute 'normal!' len . 'h'
 
   " Select the text
   normal! v
   call cursor(0, col('.') + (mode ==# 'i' ? len + 1 : len))
   execute 'normal! ' "\<C-g>"
+endfunction
+function! deoppet#util#_insert_text(text) abort
+  " Insert the text
+  execute 'normal!' ((col('.') == col('$') ? 'A' : 'i') . a:text)
+  stopinsert
 endfunction
 function! deoppet#util#_select_pos(pos) abort
   " Select to the pos

@@ -40,9 +40,13 @@ class Deoppet():
 
     def _load_snippets(self) -> None:
         snippets: typing.Dict[str, Snippet] = {}
-        filetype: str = self._vim.options['filetype']
+        buf = self._vim.current.buffer
+        filetype: str = self._vim.call(
+            'getbufvar', buf.number, '&filetype')
         if not filetype:
             filetype = 'nothing'
+        #debug(self._vim, filetype)
+        #debug(self._vim, self._vim.current.buffer.number)
         for dir in self._options['snippets_dirs']:
             for filename in glob.glob(
                     f'{dir}/{filetype}.snip') + glob.glob(f'{dir}/_.snip'):
@@ -51,4 +55,4 @@ class Deoppet():
                     parser = Parser(self._vim)
                     snippets.update(parser.parse(f.read()))
         #debug(self._vim, snippets)
-        self._vim.current.buffer.vars['deoppet_snippets'] = snippets
+        buf.vars['deoppet_snippets'] = snippets

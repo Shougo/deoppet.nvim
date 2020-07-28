@@ -4,6 +4,8 @@
 # License: MIT license
 # =============================================================================
 
+import re
+
 from deoplete.base.source import Base
 
 
@@ -21,5 +23,11 @@ class Source(Base):
                 bvars['deoppet_snippets'], dict):
             return []
 
+        m1 = re.match(r'\w+$', context['complete_str'])
+        m2 = re.match(r'\S+$', context['complete_str'])
+        snippets = bvars['deoppet_snippets'].values()
+        if m1 and m2 and m1.group(0) != m2.group(0):
+            snippets = [x for x in snippets if x['options']['word']]
         return [{'word': x['trigger']} for x in
-                bvars['deoppet_snippets'].values()]
+                snippets if not x['regexp'] or self.vim.call(
+                    'matchstr', context['input'], x['regexp'])]

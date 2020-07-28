@@ -8,6 +8,6 @@ function! deoppet#handler#_init() abort
   augroup deoppet
     autocmd!
     autocmd BufWritePost * call _deoppet_event('BufWritePost')
-    autocmd FileType * call _deoppet_event('FileType')
+    autocmd BufRead,FileType * call _deoppet_event('FileType')
   augroup END
 endfunction

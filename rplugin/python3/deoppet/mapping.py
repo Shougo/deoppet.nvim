@@ -46,14 +46,14 @@ class Mapping():
         if name == 'clear':
             return self.clear()
         if name == 'expand':
-            return self.expand()
+            return self.expand_trigger()
         if name == 'jump_forward':
             return self.jump(True)
         if name == 'jump_backward':
             return self.jump(False)
         return
 
-    def expand(self) -> None:
+    def expand_trigger(self) -> None:
         self.clear()
 
         bvars = self._vim.current.buffer.vars
@@ -65,19 +65,29 @@ class Mapping():
         if not trigger:
             return
 
+        snippet = snippets[trigger]
+
+        if snippet['regexp'] and not self._vim.call(
+                'matchstr', cur_text, snippet['regexp']):
+            # Not matched regexp
+            return
+
         # Expand trigger
         cursor = self._vim.current.window.cursor
         linenr = cursor[0]
+        col = cursor[1]
+        #debug(self._vim, col)
+        #debug(self._vim, len(cur_text))
         buf = self._vim.current.buffer
-        snippet = snippets[trigger]
-        cur_text = cur_text[: len(cur_text) - len(trigger)]
+        prev_text = cur_text[: len(cur_text) - len(trigger)]
         next_text = self._vim.call('deoppet#util#_get_next_text')
-        # debug(self._vim, cur_text)
-        # debug(self._vim, snippet['trigger'])
-        # debug(self._vim, next_text)
+
+        #debug(self._vim, cur_text)
+        #debug(self._vim, snippet['trigger'])
+        #debug(self._vim, next_text)
 
         texts = snippet['text'].split('\n')
-        buf[linenr - 1] = cur_text + texts[0] + next_text
+        buf[linenr - 1] = prev_text + texts[0] + next_text
         if len(texts) > 1:
             lastnr = linenr + len(texts) - 2
             buf[linenr:lastnr - 1] = texts[1:-1]
@@ -87,17 +97,31 @@ class Mapping():
             else:
                 buf.append(texts[-1])
 
-        col = self._vim.call('len', cur_text + texts[0])
+        col = self._vim.call('len', prev_text + texts[0])
 
         tabstops = []
+        evals = []
         self._ns = self._vim.api.create_namespace('deoppet')
         for tabstop in copy.deepcopy(snippet['tabstops']):
+            tabstop_col = tabstop['col']
+            if tabstop['row'] == 0:
+                tabstop_col += self._vim.call('len', prev_text)
             mark_id = buf.api.set_extmark(
                 self._ns, 0,
-                tabstop['row'] + linenr - 1, tabstop['col'], {})
+                tabstop['row'] + linenr - 1, tabstop_col, {})
             tabstop['id_begin'] = mark_id
             tabstop['id_end'] = mark_id
             tabstops.append(tabstop)
+        for ev in copy.deepcopy(snippet['evals']):
+            ev_col = ev['col']
+            if ev['row'] == 0:
+                ev_col += self._vim.call('len', prev_text)
+            mark_id = buf.api.set_extmark(
+                self._ns, 0,
+                ev['row'] + linenr - 1, ev_col, {})
+            ev['id_begin'] = mark_id
+            ev['id_end'] = mark_id
+            evals.append(ev)
 
         bvars['deoppet_tabstops'] = tabstops
         bvars['deoppet_mark_pos'] = 0
@@ -105,8 +129,24 @@ class Mapping():
 
         self.cursor(linenr, col, next_text)
 
+        # Expand evals
+        for ev in evals:
+            self.expand_eval(ev)
+
         # Jump forward
         return self.jump(True)
+
+    def expand_eval(self, ev: typing.Dict[str, typing.Any]) -> None:
+        buf = self._vim.current.buffer
+        mark_begin = buf.api.get_extmark_by_id(self._ns, ev['id_begin'])
+        if not mark_begin or mark_begin[0] >= len(buf):
+            # Overflow
+            return
+        next_text = buf[mark_begin[0]][mark_begin[1]:]
+        self.cursor(mark_begin[0] + 1, mark_begin[1], next_text)
+
+        self._vim.call('deoppet#util#_insert_text',
+                       self._vim.call('eval', ev['expr']))
 
     def jump(self, is_forward: bool) -> None:
         bvars = self._vim.current.buffer.vars

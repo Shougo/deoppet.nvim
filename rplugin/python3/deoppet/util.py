@@ -24,3 +24,7 @@ def debug(vim: Nvim, expr: typing.Any) -> None:
         vim.out_write('[deoppet] ' + string + '\n')
     else:
         print(expr)
+
+
+def len_bytes(word: str) -> int:
+    return len(bytes(word, 'utf-8', 'surrogatepass'))

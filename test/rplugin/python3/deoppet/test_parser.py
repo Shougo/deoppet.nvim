@@ -21,8 +21,10 @@ snippet    foo
         'foo': {
             'trigger': 'foo',
             'text': 'foobar',
+            'regexp': '',
             'options': {},
             'tabstops': [],
+            'evals': [],
         }
     }
 
@@ -38,14 +40,18 @@ snippet    bar
         'foo': {
             'trigger': 'foo',
             'text': 'foobar',
+            'regexp': '',
             'options': {},
             'tabstops': [],
+            'evals': [],
         },
         'bar': {
             'trigger': 'bar',
             'text': 'baz',
+            'regexp': '',
             'options': {},
             'tabstops': [],
+            'evals': [],
         }
     }
 
@@ -67,6 +73,7 @@ options    word
             'options': {'word': True},
             'text': 'foobar',
             'tabstops': [],
+            'evals': [],
         }
     }
 
@@ -79,11 +86,13 @@ snippet    foo
         'foo': {
             'trigger': 'foo',
             'text': 'foobar  ',
+            'regexp': '',
             'options': {},
             'tabstops': [
                 {'number': 1, 'row': 0, 'col': 7, 'default': '', 'comment': ''},
                 {'number': 2, 'row': 0, 'col': 8, 'default': '', 'comment': ''},
             ],
+            'evals': [],
         }
     }
 
@@ -106,6 +115,7 @@ options     head
             'abbr': 'if endif',
             'trigger': 'if',
             'text': 'if \n\nendif',
+            'regexp': '',
             'options': {'head': True},
             'tabstops': [
                 {
@@ -117,13 +127,16 @@ options     head
                     'default': 'TARGET', 'comment': ''
                 },
             ],
+            'evals': [],
         },
         'elseif': {
             'trigger': 'elseif',
             'text': 'elseif condition\nTARGET',
+            'regexp': '',
             'options': {'head': True},
             'tabstops': [
             ],
+            'evals': [],
         }
     }
 

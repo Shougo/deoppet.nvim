@@ -54,8 +54,10 @@ class Parser():
         snippet: Snippet = {}
         snippet['trigger'] = m.group(1)
         snippet['text'] = ''
+        snippet['regexp'] = ''
         snippet['options'] = {}
         snippet['tabstops'] = []
+        snippet['evals'] = []
 
         # Parse the next line
         while (self._linenr + 1) < self._line_max:
@@ -112,11 +114,18 @@ class Parser():
             # Substitute tabstops
             line = m.group(1)
             while 1:
-                [tabstop, line] = self.parse_tabstop(line, text_linenr)
-                if not tabstop:
-                    break
+                prev_line = line
 
-                snippet['tabstops'].append(tabstop)
+                [ev, line] = self.parse_eval(line, text_linenr)
+                if ev:
+                    snippet['evals'].append(ev)
+
+                [tabstop, line] = self.parse_tabstop(line, text_linenr)
+                if tabstop:
+                    snippet['tabstops'].append(tabstop)
+
+                if prev_line == line:
+                    break
 
             if snippet['text']:
                 snippet['text'] += '\n'
@@ -146,6 +155,25 @@ class Parser():
                 'col': m.start(),
                 'default': default,
                 'comment': '',
+            },
+            re.sub(pattern, '', line, count=1)
+        ]
+
+    def parse_eval(self, line: str, text_linenr: int
+                   ) -> typing.List[typing.Any]:
+        pattern = r'`([^`]+)`'
+        m = re.search(pattern, line)
+        if not m:
+            return [{}, line]
+
+        eval_expr = m.group(1)
+        if not eval_expr:
+            eval_expr = ''
+        return [
+            {
+                'row': text_linenr,
+                'col': m.start(),
+                'expr': eval_expr,
             },
             re.sub(pattern, '', line, count=1)
         ]
