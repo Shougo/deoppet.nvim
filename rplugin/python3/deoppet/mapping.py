@@ -35,6 +35,7 @@ class Mapping():
         bvars['deoppet_tabstops'] = []
         bvars['deoppet_mark_pos'] = 0
         bvars['deoppet_snippet'] = {}
+        self._vim.vars['deoppet#captures'] = []
 
     def mapping(self, name: str) -> None:
         bvars = self._vim.current.buffer.vars
@@ -67,10 +68,15 @@ class Mapping():
 
         snippet = snippets[trigger]
 
-        if snippet['regexp'] and not self._vim.call(
-                'matchstr', cur_text, snippet['regexp']):
-            # Not matched regexp
-            return
+        if snippet['regexp']:
+            if not self._vim.call(
+                    'matchstr', cur_text, snippet['regexp']):
+                # Not matched regexp
+                return
+
+            # Capture
+            self._vim.vars['deoppet#captures'] = self._vim.call(
+                'matchlist', cur_text, snippet['regexp'])
 
         # Expand trigger
         cursor = self._vim.current.window.cursor

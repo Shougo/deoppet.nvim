@@ -106,6 +106,16 @@ EXAMPLES						*deoppet-examples*
 ==============================================================================
 FREQUENTLY ASKED QUESTIONS (FAQ)			*deoppet-faq*
 
+Q: I want to capture group in snippet.
+https://github.com/Shougo/neosnippet.vim/issues/426
+
+A: Please use "g:deoppet#captures" variable for it.
+>
+	snippet    .map
+	options     word
+	regexp     '\(\w\+\)s\.map$'
+	  .map(`g:deoppet#captures[1]` => ${0})
+<
 ==============================================================================
 COMPATIBILITY					*deoppet-compatibility*
 
