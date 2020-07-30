@@ -175,8 +175,8 @@ class Mapping():
         if tabstop['default']:
             mark_end = buf.api.get_extmark_by_id(
                 self._ns, tabstop['id_end'])
-            debug(self._vim, mark_begin)
-            debug(self._vim, mark_end)
+            # debug(self._vim, mark_begin)
+            # debug(self._vim, mark_end)
             if mark_begin == mark_end:
                 self._vim.call('deoppet#util#_select_text',
                                tabstop['default'])
