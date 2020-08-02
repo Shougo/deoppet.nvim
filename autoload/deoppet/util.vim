@@ -114,17 +114,11 @@ function! deoppet#util#_indent_snippet(begin, end) abort
 
   let pos = getpos('.')
 
-  let equalprg = &l:equalprg
   try
-    setlocal equalprg=
-
     for line_nr in range(a:begin, a:end)
       call cursor(line_nr, 0)
-
-      silent normal! ==
     endfor
   finally
-    let &l:equalprg = equalprg
     call setpos('.', pos)
   endtry
 endfunction

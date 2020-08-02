@@ -62,8 +62,9 @@ class Mapping():
         cur_text = self._vim.call('deoppet#util#_get_cur_text')
         trigger = self._vim.call('deoppet#util#_get_cursor_snippet',
                                  snippets, cur_text)
-        prev_text = cur_text[: len(cur_text) - len(trigger)]
         # debug(self._vim, trigger)
+        if not trigger:
+            return
 
         snippet = snippets[trigger]
         if snippet['regexp']:
@@ -76,6 +77,7 @@ class Mapping():
             self._vim.vars['deoppet#captures'] = self._vim.call(
                 'matchlist', cur_text, snippet['regexp'])
 
+        prev_text = cur_text[: len(cur_text) - len(trigger)]
         return self.expand(trigger, prev_text)
 
     def expand(self, trigger: str, prev_text: str) -> None:

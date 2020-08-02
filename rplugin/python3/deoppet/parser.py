@@ -7,7 +7,7 @@
 import re
 import typing
 
-# from deoppet.util import debug
+from deoppet.util import debug
 from pynvim import Nvim
 
 Snippet = typing.Dict[str, typing.Any]
@@ -21,6 +21,12 @@ class Parser():
         self._lines: typing.List[str] = []
         self._linenr = 0
         self._line_max = 0
+
+    def debug(self, expr: typing.Any) -> None:
+        debug(self._vim, expr)
+
+    def error(self, expr: typing.Any) -> None:
+        self._vim.call('deoppet#util#print_error', expr)
 
     def parse(self, text: str) -> Snippet:
         self._lines = text.splitlines()
@@ -36,12 +42,15 @@ class Parser():
                 continue
             if not re.search(r'^\s*snippet\s+', line):
                 # Error
+                self.error(f'parse error in: {line}')
                 return {}
 
             snippet = self.parse_one_snippet()
             if not snippet:
                 # Error
+                self.error(f'parse error in: {line}')
                 return {}
+
             snippets[snippet['trigger']] = snippet
         return snippets
 
@@ -107,12 +116,12 @@ class Parser():
                 text_linenr += 1
                 continue
 
-            m = re.search(r'^\s+(.*)$', line)
+            m = re.search(r'^([ ]{4}|\t)(.*)$', line)
             if not m:
                 break
 
             # Substitute tabstops
-            line = m.group(1)
+            line = m.group(2)
             while 1:
                 prev_line = line
 
