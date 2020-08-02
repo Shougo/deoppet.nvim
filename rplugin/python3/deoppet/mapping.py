@@ -149,6 +149,10 @@ class Mapping():
         for ev in evals:
             self.expand_eval(ev)
 
+        # Indentation
+        self._vim.call('deoppet#util#_indent_snippet',
+                       linenr + 1, linenr + len(texts) - 1)
+
         # Jump forward
         return self.jump(True)
 
