@@ -17,6 +17,6 @@ lint:
 
 test:
 	pytest --version
-	pytest
+	pytest -vv
 
 .PHONY: install lint test

@@ -14,7 +14,7 @@ def test_parse_success():
 
     test_snippet1 = """
 snippet    foo
-   foobar
+    foobar
 """
 
     assert parser.parse(test_snippet1) == {
@@ -30,10 +30,10 @@ snippet    foo
 
     test_snippet2 = """
 snippet    foo
-   foobar
+    foobar
 
 snippet    bar
-   baz
+    baz
 """
 
     assert parser.parse(test_snippet2) == {
@@ -61,7 +61,7 @@ abbr       bar
 alias      baz
 regexp     '^% '
 options    word
-   foobar
+    foobar
 """
 
     assert parser.parse(test_snippet3) == {
@@ -79,7 +79,7 @@ options    word
 
     test_snippet4 = """
 snippet    foo
-   foobar ${1} ${2}
+    foobar ${1} ${2}
 """
 
     assert parser.parse(test_snippet4) == {
@@ -114,7 +114,7 @@ options     head
         'if': {
             'abbr': 'if endif',
             'trigger': 'if',
-            'text': 'if \n\nendif',
+            'text': 'if \n  \nendif',
             'regexp': '',
             'options': {'head': True},
             'tabstops': [
@@ -123,7 +123,7 @@ options     head
                     'default': '#:condition', 'comment': ''
                  },
                 {
-                    'number': 0, 'row': 1, 'col': 0,
+                    'number': 0, 'row': 1, 'col': 2,
                     'default': 'TARGET', 'comment': ''
                 },
             ],
@@ -131,7 +131,7 @@ options     head
         },
         'elseif': {
             'trigger': 'elseif',
-            'text': 'elseif condition\nTARGET',
+            'text': 'elseif condition\n    TARGET',
             'regexp': '',
             'options': {'head': True},
             'tabstops': [
