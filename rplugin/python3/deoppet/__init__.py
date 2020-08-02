@@ -30,6 +30,10 @@ if hasattr(vim, 'plugin'):
             self._vim.vars['deoppet#_channel_id'] = self._vim.channel_id
             self._deoppet = Deoppet(self._vim)
 
+        @vim.function('_deoppet_expand', sync=True)  # type: ignore
+        def expand(self, args: typing.List[str]) -> None:
+            self._deoppet.expand(args[0])
+
         @vim.function('_deoppet_mapping', sync=True)  # type: ignore
         def mapping(self, args: typing.List[str]) -> None:
             self._deoppet.mapping(args[0])

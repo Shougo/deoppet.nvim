@@ -32,6 +32,10 @@ class Deoppet():
     def mapping(self, name: str) -> None:
         return self._mapping.mapping(name)
 
+    def expand(self, trigger: str) -> None:
+        return self._mapping.expand(
+            trigger, self._vim.call('deoppet#util#_get_cur_text'))
+
     def event(self, name: str) -> None:
         if name == 'FileType':
             return self._load_snippets()

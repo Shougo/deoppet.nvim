@@ -95,3 +95,14 @@ function! deoppet#util#_select_pos(pos) abort
   call cursor(0, a:pos[1] + 1)
   execute 'normal! ' "\<C-g>"
 endfunction
+function! deoppet#util#_start_insert() abort
+  if mode() ==# 'i'
+    return
+  endif
+
+  if col('.') == col('$')
+    startinsert!
+  else
+    startinsert
+  endif
+endfunction

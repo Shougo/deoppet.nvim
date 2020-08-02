@@ -47,14 +47,14 @@ class Mapping():
         if name == 'clear':
             return self.clear()
         if name == 'expand':
-            return self.expand_trigger()
+            return self.expand_current_trigger()
         if name == 'jump_forward':
             return self.jump(True)
         if name == 'jump_backward':
             return self.jump(False)
         return
 
-    def expand_trigger(self) -> None:
+    def expand_current_trigger(self) -> None:
         self.clear()
 
         bvars = self._vim.current.buffer.vars
@@ -62,12 +62,10 @@ class Mapping():
         cur_text = self._vim.call('deoppet#util#_get_cur_text')
         trigger = self._vim.call('deoppet#util#_get_cursor_snippet',
                                  snippets, cur_text)
+        prev_text = cur_text[: len(cur_text) - len(trigger)]
         # debug(self._vim, trigger)
-        if not trigger:
-            return
 
         snippet = snippets[trigger]
-
         if snippet['regexp']:
             if not self._vim.call(
                     'matchstr', cur_text, snippet['regexp']):
@@ -78,6 +76,20 @@ class Mapping():
             self._vim.vars['deoppet#captures'] = self._vim.call(
                 'matchlist', cur_text, snippet['regexp'])
 
+        return self.expand(trigger, prev_text)
+
+    def expand(self, trigger: str, prev_text: str) -> None:
+        bvars = self._vim.current.buffer.vars
+        if 'deoppet_snippets' not in bvars:
+            return
+
+        snippets = bvars['deoppet_snippets']
+
+        if not trigger or trigger not in snippets:
+            return
+
+        snippet = snippets[trigger]
+
         # Expand trigger
         cursor = self._vim.current.window.cursor
         linenr = cursor[0]
@@ -85,10 +97,8 @@ class Mapping():
         # debug(self._vim, col)
         # debug(self._vim, len(cur_text))
         buf = self._vim.current.buffer
-        prev_text = cur_text[: len(cur_text) - len(trigger)]
         next_text = self._vim.call('deoppet#util#_get_next_text')
 
-        # debug(self._vim, cur_text)
         # debug(self._vim, snippet['trigger'])
         # debug(self._vim, next_text)
 

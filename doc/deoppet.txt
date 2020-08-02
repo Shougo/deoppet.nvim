@@ -115,6 +115,7 @@ A: Please use "g:deoppet#captures" variable for it.
 	options     word
 	regexp     '\(\w\+\)s\.map$'
 	  .map(`g:deoppet#captures[1]` => ${0})
+
 <
 ==============================================================================
 COMPATIBILITY					*deoppet-compatibility*
