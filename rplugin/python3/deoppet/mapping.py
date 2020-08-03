@@ -108,8 +108,9 @@ class Mapping():
         buf[linenr - 1] = prev_text + texts[0] + next_text
         if len(texts) > 1:
             lastnr = linenr + len(texts) - 2
-            buf[linenr:lastnr - 1] = texts[1:-1]
-            buf[lastnr + 1:] = buf[lastnr:]
+            if linenr != lastnr:
+                buf[linenr:lastnr - 1] = texts[1:-1]
+                buf[lastnr + 1:] = buf[lastnr:]
             if len(buf) > lastnr:
                 buf[lastnr] = texts[-1]
             else:
