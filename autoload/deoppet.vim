@@ -14,3 +14,15 @@ function! deoppet#expand(trigger) abort
   call _deoppet_expand(a:trigger)
   return ''
 endfunction
+
+function! deoppet#expandable() abort
+  if !exists('b:deoppet_snippets')
+    return 0
+  endif
+
+  let cur_text = deoppet#util#_get_cur_text()
+  let trigger = deoppet#util#_get_cursor_snippet(
+        \ b:deoppet_snippets, cur_text)
+
+  return trigger !=# ''
+endfunction
