@@ -94,9 +94,9 @@ class Parser():
                     snippet['options'][option] = True
                 continue
 
-            m = re.search(r'^\s+(.*)$', line)
+            m = re.search(r'^(\s+)(.*)$', line)
             if m:
-                return self.parse_text(snippet)
+                return self.parse_text(snippet, m.group(1))
 
             # Error
             break
@@ -104,7 +104,7 @@ class Parser():
         # Error
         return {}
 
-    def parse_text(self, snippet: Snippet) -> Snippet:
+    def parse_text(self, snippet: Snippet, base_indent: str) -> Snippet:
         text_linenr = 0
         while self._linenr < self._line_max:
             line = self._lines[self._linenr]
@@ -116,12 +116,11 @@ class Parser():
                 text_linenr += 1
                 continue
 
-            m = re.search(r'^([ ]{4}|\t)(.*)$', line)
-            if not m:
+            if not line.startswith(base_indent):
                 break
 
             # Substitute tabstops
-            line = m.group(2)
+            line = line[len(base_indent):]
             while 1:
                 prev_line = line
 

@@ -5,6 +5,7 @@
 # ============================================================================
 
 import copy
+import re
 import typing
 
 from deoppet.util import debug
@@ -104,7 +105,13 @@ class Mapping():
         # debug(self._vim, snippet['trigger'])
         # debug(self._vim, next_text)
 
-        texts = snippet['text'].split('\n')
+        base_indent = ''
+        m = re.match(r'\s+', prev_text)
+        if m:
+            base_indent = m.group(0)
+
+        texts = [(base_indent if num != 0 else '') + x for num, x
+                 in enumerate(snippet['text'].split('\n'))]
         buf[linenr - 1] = prev_text + texts[0] + next_text
         if len(texts) > 1:
             lastnr = linenr + len(texts) - 2
@@ -125,6 +132,8 @@ class Mapping():
             tabstop_col = tabstop['col']
             if tabstop['row'] == 0:
                 tabstop_col += self._vim.call('len', prev_text)
+            else:
+                tabstop_col += len(base_indent)
             mark_id = buf.api.set_extmark(
                 self._ns, 0,
                 tabstop['row'] + linenr - 1, tabstop_col, {})
