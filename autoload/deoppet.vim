@@ -17,7 +17,7 @@ endfunction
 
 function! deoppet#expandable() abort
   if !exists('b:deoppet_snippets')
-    return 0
+    return v:false
   endif
 
   let cur_text = deoppet#util#_get_cur_text()

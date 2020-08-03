@@ -53,7 +53,6 @@ deoppet#initialize()
 		Initialize deoppet plugin.
 		Note: You need to call the function before use deoppet plugin.
 
-
 						*deoppet#custom#option()*
 deoppet#custom#option({option-name}, {value})
 deoppet#custom#option({dict})
@@ -62,6 +61,11 @@ deoppet#custom#option({dict})
 		If {dict} is available, the key is {option-name} and the value
 		is {value}.
                 Note: The all options are in |deoppet-options|.
+
+							*deoppet#expandable()*
+deoppet#expandable()
+		It checks if the cursor text is a snippet trigger.
+		Note: You should use it with imap <expr>.
 
 ------------------------------------------------------------------------------
 KEY MAPPINGS 						*deoppet-key-mappings*
@@ -72,12 +76,16 @@ i_<Plug>(deoppet_expand)
 		effect if there is a snippet text to expand.
 
 					*i_<Plug>(deoppet_jump_backward)*
+					*s_<Plug>(deoppet_jump_backward)*
 i_<Plug>(deoppet_jump_backward)
+s_<Plug>(deoppet_jump_backward)
 		Jump to the previous placeholder key. It does not expand any
 		snippets.
 
 					*i_<Plug>(deoppet_jump_forward)*
+					*s_<Plug>(deoppet_jump_forward)*
 i_<Plug>(deoppet_jump_forward)
+s_<Plug>(deoppet_jump_forward)
 		Jump to the next placeholder key. It does not expand any
 		snippets.
 
@@ -96,6 +104,8 @@ snippets_dirs
 EXAMPLES						*deoppet-examples*
 >
 	imap <C-k>  <Plug>(deoppet_expand)
+	imap <expr><Tab>  deoppet#expandable() ?
+	\ "\<Plug>(deoppet_expand)" : "\<Tab>"
 	imap <C-f>  <Plug>(deoppet_jump_forward)
 	imap <C-b>  <Plug>(deoppet_jump_backward)
 
@@ -114,7 +124,7 @@ A: Please use "g:deoppet#captures" variable for it.
 	snippet    .map
 	options     word
 	regexp     '\(\w\+\)s\.map$'
-	  .map(`g:deoppet#captures[1]` => ${0})
+	    .map(`g:deoppet#captures[1]` => ${0})
 
 <
 ==============================================================================
