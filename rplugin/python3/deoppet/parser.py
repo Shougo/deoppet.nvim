@@ -15,18 +15,20 @@ Snippet = typing.Dict[str, typing.Any]
 
 class Parser():
 
-    def __init__(self, vim: Nvim) -> None:
+    def __init__(self, vim: Nvim, filename: str) -> None:
         self._vim = vim
 
         self._lines: typing.List[str] = []
         self._linenr = 0
         self._line_max = 0
+        self._filename = filename
 
     def debug(self, expr: typing.Any) -> None:
         debug(self._vim, expr)
 
     def error(self, expr: typing.Any) -> None:
-        self._vim.call('deoppet#util#print_error', expr)
+        self._vim.call('deoppet#util#print_error',
+                       f'{self._filename}:{self._linenr} ' + str(expr))
 
     def parse(self, text: str) -> Snippet:
         self._lines = text.splitlines()

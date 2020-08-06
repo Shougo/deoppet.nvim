@@ -56,7 +56,7 @@ class Deoppet():
                     f'{dir}/{filetype}.snip') + glob.glob(f'{dir}/_.snip'):
                 # debug(self._vim, filename)
                 with open(filename) as f:
-                    parser = Parser(self._vim)
+                    parser = Parser(self._vim, filename)
                     snippets.update(parser.parse(f.read()))
         # debug(self._vim, snippets)
         buf.vars['deoppet_snippets'] = snippets
