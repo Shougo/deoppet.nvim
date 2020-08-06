@@ -42,18 +42,37 @@ class Parser():
                 # Skip
                 self._linenr += 1
                 continue
-            if not re.search(r'^\s*snippet\s+', line):
-                # Error
-                self.error(f'parse error in: {line}')
-                return {}
 
-            snippet = self.parse_one_snippet()
-            if not snippet:
-                # Error
-                self.error(f'parse error in: {line}')
-                return {}
+            if re.search(r'^\s*delete\s+', line):
+                # Delete snippet trigger
+                # Todo
+                continue
+            if re.search(r'^\s*extends\s+', line):
+                # Extend snippets files.
+                # Todo
+                continue
+            if re.search(r'^\s*include\s+', line):
+                # Include snippets file.
+                # Todo
+                continue
+            if re.search(r'^\s*source\s+', line):
+                # Source Vim script file.
+                # Todo
+                continue
 
-            snippets[snippet['trigger']] = snippet
+            if re.search(r'^\s*snippet\s+', line):
+                snippet = self.parse_one_snippet()
+                if not snippet:
+                    # Error
+                    self.error(f'parse error in: {line}')
+                    return {}
+
+                snippets[snippet['trigger']] = snippet
+                continue
+
+            # Error
+            self.error(f'parse error in: {line}')
+            return {}
         return snippets
 
     def parse_one_snippet(self) -> Snippet:
