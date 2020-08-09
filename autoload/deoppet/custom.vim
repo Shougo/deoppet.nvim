@@ -11,15 +11,49 @@ function! deoppet#custom#_get() abort
 
   return s:custom
 endfunction
+function! deoppet#custom#_get_buffer() abort
+  if !exists('b:custom')
+    call deoppet#custom#_init_buffer()
+  endif
+
+  return b:custom
+endfunction
 
 function! deoppet#custom#_init() abort
   let s:custom = {}
   let s:custom.option = deoppet#init#_options()
+
+  let s:cached = {}
+  let s:cached.option = {}
+endfunction
+function! deoppet#custom#_init_buffer() abort
+  let b:custom = {}
+  let b:custom.option = {}
+endfunction
+
+function! deoppet#custom#_update_cache() abort
+  if !exists('s:custom')
+    call deoppet#custom#_init()
+  endif
+
+  let custom_buffer = deoppet#custom#_get_buffer()
+
+  let s:cached.option = copy(s:custom.option)
+  let s:cached.buffer_option = copy(custom_buffer.option)
+  call extend(s:cached.option, s:cached.buffer_option)
+endfunction
+
+function! deoppet#custom#_get_option(name) abort
+  return s:cached.option[a:name]
 endfunction
 
 function! deoppet#custom#option(name_or_dict, ...) abort
   let custom = deoppet#custom#_get().option
 
+  call s:set_custom(custom, a:name_or_dict, get(a:000, 0, ''))
+endfunction
+function! deoppet#custom#buffer_option(name_or_dict, ...) abort
+  let custom = deoppet#custom#_get_buffer().option
   call s:set_custom(custom, a:name_or_dict, get(a:000, 0, ''))
 endfunction
 

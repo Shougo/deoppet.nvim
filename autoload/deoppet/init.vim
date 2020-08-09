@@ -86,6 +86,6 @@ EOF
 endfunction
 function! deoppet#init#_options() abort
   return {
-        \ 'snippet_dirs': [],
+        \ 'snippets_dirs': [],
         \ }
 endfunction

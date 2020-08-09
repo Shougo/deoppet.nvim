@@ -22,7 +22,8 @@ class Deoppet():
             return
 
         self._mapping = Mapping(self._vim)
-        self._options = self._vim.call('deoppet#custom#_get')['option']
+
+        self._vim.call('deoppet#custom#_update_cache')
 
         self._load_snippets()
 
@@ -37,6 +38,8 @@ class Deoppet():
             trigger, self._vim.call('deoppet#util#_get_cur_text'))
 
     def event(self, name: str) -> None:
+        self._vim.call('deoppet#custom#_update_cache')
+
         if name == 'FileType':
             return self._load_snippets()
         else:
@@ -51,7 +54,9 @@ class Deoppet():
             filetype = 'nothing'
         # debug(self._vim, filetype)
         # debug(self._vim, self._vim.current.buffer.number)
-        for dir in self._options['snippets_dirs']:
+        snippets_dirs = self._vim.call(
+            'deoppet#custom#_get_option', 'snippets_dirs')
+        for dir in snippets_dirs:
             for filename in glob.glob(
                     f'{dir}/{filetype}.snip') + glob.glob(f'{dir}/_.snip'):
                 # debug(self._vim, filename)
