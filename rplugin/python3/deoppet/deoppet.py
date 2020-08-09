@@ -49,7 +49,7 @@ class Deoppet():
         snippets: typing.Dict[str, Snippet] = {}
         buf = self._vim.current.buffer
         filetype: str = self._vim.call(
-            'getbufvar', buf.number, '&filetype')
+            'deoppet#util#_get_context_filetype')
         if not filetype:
             filetype = 'nothing'
         # debug(self._vim, filetype)

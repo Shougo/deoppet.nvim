@@ -122,3 +122,8 @@ function! deoppet#util#_indent_snippet(begin, end) abort
     call setpos('.', pos)
   endtry
 endfunction
+
+function! deoppet#util#_get_context_filetype() abort
+  return exists('*context_filetype#get_filetype') ?
+        \ context_filetype#get_filetype() : &filetype
+endfunction
