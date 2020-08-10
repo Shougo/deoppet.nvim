@@ -92,6 +92,16 @@ s_<Plug>(deoppet_jump_forward)
 ------------------------------------------------------------------------------
 OPTIONS							*deoppet-options*
 
+					*deoppet-options-ft_snippets_map*
+ft_snippets_map
+		From Filetype to snippets mappings.
+		You can extend `javascript` filetype with `typescript` filetype.
+>
+	call deoppet#custom#option('ft_snippets_map',
+	\ {'typescript': ['typescript', 'javascript']})
+<
+		Default: {}
+
 						*deoppet-options-snippets_dir*
 snippets_dirs
 		Snippets directories list.

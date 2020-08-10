@@ -9,7 +9,7 @@ import typing
 
 from deoppet.parser import Parser, Snippet
 from deoppet.mapping import Mapping
-# from deoppet.util import debug
+from deoppet.util import debug
 
 from pynvim import Nvim
 
@@ -30,6 +30,9 @@ class Deoppet():
         self._vim.call('deoppet#mapping#_init')
         self._vim.call('deoppet#handler#_init')
 
+    def debug(self, expr: typing.Any) -> None:
+        debug(self._vim, expr)
+
     def mapping(self, name: str) -> None:
         return self._mapping.mapping(name)
 
@@ -46,22 +49,28 @@ class Deoppet():
             return self._mapping.clear()
 
     def _load_snippets(self) -> None:
-        snippets: typing.Dict[str, Snippet] = {}
         buf = self._vim.current.buffer
         filetype: str = self._vim.call(
             'deoppet#util#_get_context_filetype')
         if not filetype:
             filetype = 'nothing'
-        # debug(self._vim, filetype)
-        # debug(self._vim, self._vim.current.buffer.number)
         snippets_dirs = self._vim.call(
             'deoppet#custom#_get_option', 'snippets_dirs')
+        ft_snippets_map = self._vim.call(
+            'deoppet#custom#_get_option', 'ft_snippets_map')
+        if filetype in ft_snippets_map:
+            fts = ft_snippets_map[filetype]
+        else:
+            fts = filetype.split(',')
+
+        snippets: typing.Dict[str, Snippet] = {}
         for dir in snippets_dirs:
-            for filename in glob.glob(
-                    f'{dir}/{filetype}.snip') + glob.glob(f'{dir}/_.snip'):
-                # debug(self._vim, filename)
-                with open(filename) as f:
-                    parser = Parser(self._vim, filename)
-                    snippets.update(parser.parse(f.read()))
+            for ft in fts:
+                for filename in glob.glob(
+                        f'{dir}/{ft}.snip') + glob.glob(f'{dir}/_.snip'):
+                    # debug(self._vim, filename)
+                    with open(filename) as f:
+                        parser = Parser(self._vim, filename)
+                        snippets.update(parser.parse(f.read()))
         # debug(self._vim, snippets)
         buf.vars['deoppet_snippets'] = snippets
