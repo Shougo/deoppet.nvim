@@ -26,12 +26,21 @@ class Mapping():
         self._ns = self._vim.api.create_namespace('deoppet')
         buf = self._vim.current.buffer
         bvars = buf.vars
-        if 'deoppet_expand_state' not in bvars:
+        if 'deoppet_expand_state' in bvars:
+            for tabstop in bvars['deoppet_expand_state']['tabstops']:
+                buf.api.del_extmark(self._ns, tabstop['id_begin'])
+                buf.api.del_extmark(self._ns, tabstop['id_end'])
             return
 
-        for tabstop in bvars['deoppet_expand_state']['tabstops']:
-            buf.api.del_extmark(self._ns, tabstop['id_begin'])
-            buf.api.del_extmark(self._ns, tabstop['id_end'])
+        if 'deoppet_expand_stack' not in bvars:
+            bvars['deoppet_expand_stack'] = []
+
+        if bvars['deoppet_expand_stack']:
+            # Pop old state
+            stack = bvars['deoppet_expand_stack']
+            bvars['deoppet_expand_state'] = stack.pop()
+            bvars['deoppet_expand_stack'] = stack
+            return
 
         bvars['deoppet_expand_state'] = {
             'tabstops': [],
@@ -87,6 +96,12 @@ class Mapping():
         snippets = bvars['deoppet_snippets']
         if not trigger or trigger not in snippets:
             return
+
+        if bvars['deoppet_expand_state']['snippet']:
+            # Push current state
+            stack = bvars['deoppet_expand_stack']
+            stack.append(bvars['deoppet_expand_state'])
+            bvars['deoppet_expand_stack'] = stack
 
         snippet = snippets[trigger]
 
