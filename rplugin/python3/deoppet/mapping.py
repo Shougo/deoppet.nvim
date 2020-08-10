@@ -26,22 +26,24 @@ class Mapping():
         self._ns = self._vim.api.create_namespace('deoppet')
         buf = self._vim.current.buffer
         bvars = buf.vars
-        if 'deoppet_tabstops' not in bvars:
+        if 'deoppet_expand_state' not in bvars:
             return
 
-        for tabstop in bvars['deoppet_tabstops']:
+        for tabstop in bvars['deoppet_expand_state']['tabstops']:
             buf.api.del_extmark(self._ns, tabstop['id_begin'])
             buf.api.del_extmark(self._ns, tabstop['id_end'])
 
-        bvars['deoppet_tabstops'] = []
-        bvars['deoppet_mark_pos'] = -1
-        bvars['deoppet_snippet'] = {}
+        bvars['deoppet_expand_state'] = {
+            'tabstops': [],
+            'mark_pos': -1,
+            'snippet': {},
+        }
         self._vim.vars['deoppet#captures'] = []
 
     def mapping(self, name: str) -> None:
         bvars = self._vim.current.buffer.vars
-        if 'deoppet_tabstops' not in bvars:
-            bvars['deoppet_tabstops'] = []
+        if 'deoppet_expand_state' not in bvars:
+            self.clear()
         if 'deoppet_snippets' not in bvars:
             return
 
@@ -58,8 +60,7 @@ class Mapping():
     def expand_current_trigger(self) -> None:
         self.clear()
 
-        bvars = self._vim.current.buffer.vars
-        snippets = bvars['deoppet_snippets']
+        snippets = self._vim.current.buffer.vars['deoppet_snippets']
         cur_text = self._vim.call('deoppet#util#_get_cur_text')
         trigger = self._vim.call('deoppet#util#_get_cursor_snippet',
                                  snippets, cur_text)
@@ -82,11 +83,8 @@ class Mapping():
 
     def expand(self, trigger: str, prev_text: str) -> None:
         bvars = self._vim.current.buffer.vars
-        if 'deoppet_snippets' not in bvars:
-            return
 
         snippets = bvars['deoppet_snippets']
-
         if not trigger or trigger not in snippets:
             return
 
@@ -142,9 +140,11 @@ class Mapping():
             ev['id_end'] = mark_id
             evals.append(ev)
 
-        bvars['deoppet_tabstops'] = tabstops
-        bvars['deoppet_mark_pos'] = -1
-        bvars['deoppet_snippet'] = snippet
+        bvars['deoppet_expand_state'] = {
+            'tabstops': tabstops,
+            'mark_pos': -1,
+            'snippet': snippet,
+        }
 
         self.cursor(linenr, col, next_text)
 
@@ -173,15 +173,13 @@ class Mapping():
 
     def jump(self, is_forward: bool) -> None:
         bvars = self._vim.current.buffer.vars
-        if not bvars['deoppet_tabstops']:
-            self.nop()
-            return
+        state = bvars['deoppet_expand_state']
 
         buf = self._vim.current.buffer
-        tabstops = bvars['deoppet_tabstops']
+        tabstops = state['tabstops']
 
         # Update position
-        mark_pos = bvars['deoppet_mark_pos']
+        mark_pos = state['mark_pos']
         if is_forward:
             mark_pos += 1
         else:
@@ -219,13 +217,16 @@ class Mapping():
                 tabstop['id_end'] = buf.api.set_extmark(
                     self._ns, 0, mark_begin[0],
                     self._vim.call('col', '.') - 1, {})
-                bvars['deoppet_tabstops'] = tabstops
             else:
                 # Select begin to end.
                 self._vim.call('deoppet#util#_select_pos', mark_end)
 
-        # Update position
-        bvars['deoppet_mark_pos'] = mark_pos
+        # Update
+        bvars['deoppet_expand_state'] = {
+            'tabstops': tabstops,
+            'mark_pos': mark_pos,
+            'snippet': state['snippet'],
+        }
 
     def nop(self) -> None:
         return self.cursor(self._vim.current.window.cursor[0],
