@@ -12,11 +12,11 @@ function! deoppet#custom#_get() abort
   return s:custom
 endfunction
 function! deoppet#custom#_get_buffer() abort
-  if !exists('b:custom')
+  if !exists('b:deoppet_custom')
     call deoppet#custom#_init_buffer()
   endif
 
-  return b:custom
+  return b:deoppet_custom
 endfunction
 
 function! deoppet#custom#_init() abort
@@ -27,8 +27,8 @@ function! deoppet#custom#_init() abort
   let s:cached.option = {}
 endfunction
 function! deoppet#custom#_init_buffer() abort
-  let b:custom = {}
-  let b:custom.option = {}
+  let b:deoppet_custom = {}
+  let b:deoppet_custom.option = {}
 endfunction
 
 function! deoppet#custom#_update_cache() abort
