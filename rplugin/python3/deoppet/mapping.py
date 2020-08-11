@@ -121,11 +121,7 @@ class Mapping():
                  in enumerate(snippet['text'].split('\n'))]
         buf[linenr - 1] = prev_text + texts[0] + next_text
         if len(texts) > 1:
-            lastnr = linenr + len(texts) - 2
-            if len(buf) > lastnr:
-                buf[lastnr:] = texts[1:] + buf[lastnr:]
-            else:
-                buf.append(texts[1:])
+            buf[linenr:] = texts[1:] + buf[linenr:]
 
         col = self._vim.call('len', prev_text + texts[0])
 
