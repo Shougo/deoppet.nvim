@@ -30,7 +30,6 @@ class Mapping():
             for tabstop in bvars['deoppet_expand_state']['tabstops']:
                 buf.api.del_extmark(self._ns, tabstop['id_begin'])
                 buf.api.del_extmark(self._ns, tabstop['id_end'])
-            return
 
         if 'deoppet_expand_stack' not in bvars:
             bvars['deoppet_expand_stack'] = []
@@ -67,8 +66,6 @@ class Mapping():
         return
 
     def expand_current_trigger(self) -> None:
-        self.clear()
-
         snippets = self._vim.current.buffer.vars['deoppet_snippets']
         cur_text = self._vim.call('deoppet#util#_get_cur_text')
         trigger = self._vim.call('deoppet#util#_get_cursor_snippet',
@@ -88,6 +85,7 @@ class Mapping():
                 'matchlist', cur_text, snippet['regexp'])
 
         prev_text = cur_text[: len(cur_text) - len(trigger)]
+        self._vim.call('deoppet#util#_remove_trigger', trigger)
         return self.expand(trigger, prev_text)
 
     def expand(self, trigger: str, prev_text: str) -> None:
@@ -124,7 +122,7 @@ class Mapping():
             buf[linenr:] = texts[1:-1] + [
                 texts[-1] + next_text] + buf[linenr:]
         else:
-            buf[linenr - 1] = prev_text + texts[0] + next_text
+            self._vim.call('deoppet#util#_insert_text', texts[0])
 
         col = self._vim.call('len', prev_text + texts[0])
 
@@ -201,12 +199,16 @@ class Mapping():
         if mark_pos < 0 or mark_pos >= len(tabstops):
             # Overflow
             self.clear()
-            self.nop()
+
+            if bvars['deoppet_expand_state']['snippet']:
+                self.jump(is_forward)
+            else:
+                self.nop()
             return
 
         tabstop = tabstops[mark_pos]
         mark_begin = buf.api.get_extmark_by_id(self._ns, tabstop['id_begin'])
-        if not mark_begin or mark_begin[0] >= len(buf):
+        if not mark_begin or mark_begin[0] > len(buf):
             # Overflow
             self.clear()
             self.nop()

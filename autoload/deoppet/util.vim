@@ -85,8 +85,11 @@ function! deoppet#util#_select_text(text) abort
   execute 'normal! ' "\<C-g>"
 endfunction
 function! deoppet#util#_insert_text(text) abort
-  " Insert the text
   execute 'normal!' ((col('.') == col('$') ? 'A' : 'i') . a:text)
+  stopinsert
+endfunction
+function! deoppet#util#_remove_trigger(trigger) abort
+  execute 'normal!' 'a' . repeat("\<C-h>", strchars(a:trigger))
   stopinsert
 endfunction
 function! deoppet#util#_select_pos(pos) abort
