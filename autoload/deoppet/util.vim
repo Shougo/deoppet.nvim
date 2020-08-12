@@ -85,7 +85,26 @@ function! deoppet#util#_select_text(text) abort
   execute 'normal! ' "\<C-g>"
 endfunction
 function! deoppet#util#_insert_text(text) abort
-  execute 'normal!' ((col('.') == col('$') ? 'A' : 'i') . a:text)
+  let save_autoindent = &l:autoindent
+  let save_smartindent = &l:smartindent
+  let save_cindent = &l:cindent
+  let save_indentexpr = &l:indentexpr
+
+  try
+    " Disable all auto indent
+    setlocal noautoindent
+    setlocal nosmartindent
+    setlocal nocindent
+    setlocal indentexpr=
+
+    execute 'normal!' ((col('.') == col('$') ? 'A' : 'i') . a:text)
+  finally
+    let &l:autoindent = save_autoindent
+    let &l:smartindent = save_smartindent
+    let &l:cindent = save_cindent
+    let &l:indentexpr = save_indentexpr
+  endtry
+
   stopinsert
 endfunction
 function! deoppet#util#_remove_trigger(trigger) abort

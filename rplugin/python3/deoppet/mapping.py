@@ -117,14 +117,7 @@ class Mapping():
 
         texts = [(base_indent if num != 0 else '') + x for num, x
                  in enumerate(snippet['text'].split('\n'))]
-        if len(texts) > 1:
-            buf[linenr - 1] = prev_text + texts[0]
-            buf[linenr:] = texts[1:-1] + [
-                texts[-1] + next_text] + buf[linenr:]
-        else:
-            self._vim.call('deoppet#util#_insert_text', texts[0])
-
-        col = self._vim.call('len', prev_text + texts[0])
+        self._vim.call('deoppet#util#_insert_text', '\n'.join(texts))
 
         tabstops = []
         evals = []
@@ -157,8 +150,6 @@ class Mapping():
             'mark_pos': -1,
             'snippet': snippet,
         }
-
-        self.cursor(linenr, col, next_text)
 
         # Expand evals
         for ev in evals:
