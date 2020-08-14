@@ -67,7 +67,7 @@ function! deoppet#util#_get_cursor_snippet(snippets, cur_text) abort
   return cur_word
 endfunction
 
-function! deoppet#util#_select_text(text) abort
+function! deoppet#util#_select_text(text, next_text) abort
   let len = len(a:text) - 1
   if &l:selection ==# 'exclusive'
     let len += 1
@@ -76,7 +76,7 @@ function! deoppet#util#_select_text(text) abort
   let mode = mode()
 
   " Insert the text
-  call deoppet#util#_insert_text(a:text)
+  call deoppet#util#_insert_text(a:text, a:next_text)
   execute 'normal!' len . 'h'
 
   " Select the text
@@ -84,7 +84,7 @@ function! deoppet#util#_select_text(text) abort
   call cursor(0, col('.') + (mode ==# 'i' ? len + 1 : len))
   execute 'normal! ' "\<C-g>"
 endfunction
-function! deoppet#util#_insert_text(text) abort
+function! deoppet#util#_insert_text(text, next_text) abort
   let save_autoindent = &l:autoindent
   let save_smartindent = &l:smartindent
   let save_cindent = &l:cindent
@@ -97,7 +97,7 @@ function! deoppet#util#_insert_text(text) abort
     setlocal nocindent
     setlocal indentexpr=
 
-    execute 'normal!' ((col('.') == col('$') ? 'A' : 'i') . a:text)
+    execute 'normal!' (a:next_text ==# '' ? 'A' : 'i') . a:text
   finally
     let &l:autoindent = save_autoindent
     let &l:smartindent = save_smartindent

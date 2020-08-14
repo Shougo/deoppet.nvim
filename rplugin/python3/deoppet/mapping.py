@@ -106,7 +106,6 @@ class Mapping():
         # Expand trigger
         cursor = self._vim.current.window.cursor
         linenr = cursor[0]
-        col = cursor[1]
         buf = self._vim.current.buffer
         next_text = self._vim.call('deoppet#util#_get_next_text')
 
@@ -117,7 +116,15 @@ class Mapping():
 
         texts = [(base_indent if num != 0 else '') + x for num, x
                  in enumerate(snippet['text'].split('\n'))]
-        self._vim.call('deoppet#util#_insert_text', '\n'.join(texts))
+
+        options = self._vim.current.buffer.options
+        if options['expandtab']:
+            # Expand tab
+            texts = [x.replace('\t', ' ' * self._vim.call('shiftwidth'))
+                     for x in texts]
+
+        self._vim.call('deoppet#util#_insert_text',
+                       '\n'.join(texts), next_text)
 
         tabstops = []
         evals = []
@@ -172,7 +179,7 @@ class Mapping():
         self.cursor(mark_begin[0] + 1, mark_begin[1], next_text)
 
         self._vim.call('deoppet#util#_insert_text',
-                       self._vim.call('eval', ev['expr']))
+                       self._vim.call('eval', ev['expr']), next_text)
 
     def jump(self, is_forward: bool) -> None:
         bvars = self._vim.current.buffer.vars
@@ -206,6 +213,7 @@ class Mapping():
             return
 
         next_text = buf[mark_begin[0]][mark_begin[1]:]
+        self.debug(next_text)
         self.cursor(mark_begin[0] + 1, mark_begin[1], next_text)
 
         # Default
@@ -214,7 +222,7 @@ class Mapping():
                 self._ns, tabstop['id_end'])
             if mark_begin == mark_end:
                 self._vim.call('deoppet#util#_select_text',
-                               tabstop['default'])
+                               tabstop['default'], next_text)
 
                 # Update marks
                 buf.api.del_extmark(self._ns, tabstop['id_begin'])
