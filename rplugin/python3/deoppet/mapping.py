@@ -213,11 +213,10 @@ class Mapping():
             return
 
         next_text = buf[mark_begin[0]][mark_begin[1]:]
-        self.debug(next_text)
         self.cursor(mark_begin[0] + 1, mark_begin[1], next_text)
 
         # Default
-        if tabstop['default']:
+        if tabstop['default'] and tabstop['default'] != 'TARGET':
             mark_end = buf.api.get_extmark_by_id(
                 self._ns, tabstop['id_end'])
             if mark_begin == mark_end:
