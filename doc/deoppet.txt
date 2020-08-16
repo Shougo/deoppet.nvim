@@ -70,6 +70,10 @@ deoppet#expandable()
 ------------------------------------------------------------------------------
 KEY MAPPINGS 						*deoppet-key-mappings*
 
+					*x_<Plug>(deoppet_cut_text)*
+x_<Plug>(deoppet_cut_text)
+		Cut the selected text for "TARGET" placeholder.
+
 						*i_<Plug>(deoppet_expand)*
 i_<Plug>(deoppet_expand)
 		Expand a snippet in current cursor position. It only takes
@@ -88,6 +92,10 @@ i_<Plug>(deoppet_jump_forward)
 s_<Plug>(deoppet_jump_forward)
 		Jump to the next placeholder key. It does not expand any
 		snippets.
+
+					*x_<Plug>(deoppet_select_text)*
+x_<Plug>(deoppet_select_text)
+		Select the selected text for "TARGET" placeholder.
 
 ------------------------------------------------------------------------------
 OPTIONS							*deoppet-options*
@@ -118,6 +126,8 @@ EXAMPLES						*deoppet-examples*
 	\ "\<Plug>(deoppet_expand)" : "\<Tab>"
 	imap <C-f>  <Plug>(deoppet_jump_forward)
 	imap <C-b>  <Plug>(deoppet_jump_backward)
+	xmap <C-l>  <Plug>(deoppet_select_text)
+	xmap <C-x>  <Plug>(deoppet_cut_text)
 
 	call deoppet#initialize()
 	call deoppet#custom#option('snippets_dirs',

@@ -11,6 +11,8 @@ function! deoppet#init#_initialize() abort
 
   call deoppet#init#_channel()
 
+  let g:deoppet#_target_text = ''
+
   augroup deoppet
     autocmd!
   augroup END

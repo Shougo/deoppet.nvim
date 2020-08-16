@@ -76,12 +76,14 @@ function! deoppet#util#_select_text(text, next_text) abort
   let mode = mode()
 
   " Insert the text
+  let pos = getpos('.')
   call deoppet#util#_insert_text(a:text, a:next_text)
-  execute 'normal!' len . 'h'
+  let next_pos = getpos('.')
 
   " Select the text
+  call setpos('.', pos)
   normal! v
-  call cursor(0, col('.') + (mode ==# 'i' ? len + 1 : len))
+  call setpos('.', next_pos)
   execute 'normal! ' "\<C-g>"
 endfunction
 function! deoppet#util#_insert_text(text, next_text) abort
@@ -192,6 +194,8 @@ function! deoppet#util#_delete_selected_text(type, ...) abort
     else
       silent exe 'normal! `[v`]d'
     endif
+
+    return @@
   finally
     let &selection = sel_save
     let @@ = reg_save
