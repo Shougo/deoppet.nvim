@@ -47,21 +47,25 @@ class Parser():
             if m:
                 # Delete snippet trigger
                 # Todo
+                self._linenr += 1
                 continue
             m = re.search(r'^\s*extends\s+(.*)$', line)
             if m:
                 # Extend snippets files.
                 # Todo
+                self._linenr += 1
                 continue
             m = re.search(r'^\s*include\s+(.*)$', line)
             if m:
                 # Include snippets file.
                 # Todo
+                self._linenr += 1
                 continue
             m = re.search(r'^\s*source\s+(.*)$', line)
             if m:
                 # Source Vim script file.
                 # Todo
+                self._linenr += 1
                 continue
 
             if re.search(r'^\s*snippet\s+', line):
