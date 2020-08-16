@@ -149,3 +149,52 @@ function! deoppet#util#_get_context_filetype() abort
   return exists('*context_filetype#get_filetype') ?
         \ context_filetype#get_filetype() : &filetype
 endfunction
+
+function! deoppet#util#_get_selected_text(type, ...) abort
+  let sel_save = &selection
+  let &selection = 'inclusive'
+  let reg_save = @@
+  let pos = getpos('.')
+
+  try
+    " Invoked from Visual mode, use '< and '> marks.
+    if a:0
+      silent exe 'normal! `<' . a:type . '`>y'
+    elseif a:type ==# 'line'
+      silent exe "normal! '[V']y"
+    elseif a:type ==# 'block'
+      silent exe 'normal! `[\<C-v>`]y'
+    else
+      silent exe 'normal! `[v`]y'
+    endif
+
+    return @@
+  finally
+    let &selection = sel_save
+    let @@ = reg_save
+    call setpos('.', pos)
+  endtry
+endfunction
+function! deoppet#util#_delete_selected_text(type, ...) abort
+  let sel_save = &selection
+  let &selection = 'inclusive'
+  let reg_save = @@
+  let pos = getpos('.')
+
+  try
+    " Invoked from Visual mode, use '< and '> marks.
+    if a:0
+      silent exe 'normal! `<' . a:type . '`>d'
+    elseif a:type ==# 'V'
+      silent exe 'normal! `[V`]s'
+    elseif a:type ==# "\<C-v>"
+      silent exe 'normal! `[\<C-v>`]d'
+    else
+      silent exe 'normal! `[v`]d'
+    endif
+  finally
+    let &selection = sel_save
+    let @@ = reg_save
+    call setpos('.', pos)
+  endtry
+endfunction

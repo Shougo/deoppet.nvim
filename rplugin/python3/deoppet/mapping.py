@@ -229,7 +229,7 @@ class Mapping():
                 tabstop['id_begin'] = buf.api.set_extmark(
                     self._ns, 0, mark_begin[0], mark_begin[1], {})
                 tabstop['id_end'] = buf.api.set_extmark(
-                    self._ns, 0, mark_begin[0],
+                    self._ns, 0, self._vim.call('line', '.') - 1,
                     self._vim.call('col', '.') - 1, {})
             else:
                 # Select begin to end.
