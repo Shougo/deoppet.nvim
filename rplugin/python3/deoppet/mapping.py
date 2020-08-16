@@ -229,6 +229,7 @@ class Mapping():
                 default = tabstop['default']
                 if default == 'TARGET':
                     default = self._vim.vars['deoppet#_target_text']
+                    self._vim.vars['deoppet#_target_text'] = ''
 
                 if default:
                     default_lines = [
