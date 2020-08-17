@@ -43,25 +43,29 @@ class Parser():
                 self._linenr += 1
                 continue
 
-            m = re.search(r'^\s*delete\s+(.*)$', line)
+            m = re.search(r'^\s*delete\s+(\S.*)$', line)
             if m:
                 # Delete snippet trigger
-                # Todo
+                s = m.group(1)
+                if s in snippets:
+                    del snippets[s]
+                else:
+                    self.error(f'try to delete a non-existing snippet {s}')
                 self._linenr += 1
                 continue
-            m = re.search(r'^\s*extends\s+(.*)$', line)
+            m = re.search(r'^\s*extends\s+(\S.*)$', line)
             if m:
                 # Extend snippets files.
                 # Todo
                 self._linenr += 1
                 continue
-            m = re.search(r'^\s*include\s+(.*)$', line)
+            m = re.search(r'^\s*include\s+(\S.*)$', line)
             if m:
                 # Include snippets file.
                 # Todo
                 self._linenr += 1
                 continue
-            m = re.search(r'^\s*source\s+(.*)$', line)
+            m = re.search(r'^\s*source\s+(\S.*)$', line)
             if m:
                 # Source Vim script file.
                 # Todo
@@ -85,7 +89,7 @@ class Parser():
 
     def parse_one_snippet(self) -> Snippet:
         line = self._lines[self._linenr]
-        m = re.search(r'^\s*snippet\s+(.*)$', line)
+        m = re.search(r'^\s*snippet\s+(\S.*)$', line)
         if not m:
             return {}
 
@@ -102,7 +106,7 @@ class Parser():
             self._linenr += 1
 
             line = self._lines[self._linenr]
-            m = re.search(r'^abbr\s+(.*)', line)
+            m = re.search(r'^abbr\s+(\S.*)', line)
             if m:
                 snippet['abbr'] = m.group(1)
                 continue
