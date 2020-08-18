@@ -106,7 +106,7 @@ class Parser():
             self._linenr += 1
 
             line = self._lines[self._linenr]
-            m = re.search(r'^abbr\s+(\S+)', line)
+            m = re.search(r'^abbr\s+(\S.*)', line)
             if m:
                 snippet['abbr'] = m.group(1)
                 continue
