@@ -143,14 +143,16 @@ class Parser():
             line = self._lines[self._linenr]
             if not line:
                 # Skip
-                if snippet['text']:
-                    snippet['text'] += '\n'
                 self._linenr += 1
                 text_linenr += 1
                 continue
 
             if not line.startswith(base_indent):
                 break
+
+            # Add new line
+            if snippet['text']:
+                snippet['text'] += '\n'
 
             # Substitute tabstops
             line = line[len(base_indent):]
@@ -168,15 +170,10 @@ class Parser():
                 if prev_line == line:
                     break
 
-            if snippet['text']:
-                snippet['text'] += '\n'
             snippet['text'] += line
             self._linenr += 1
             text_linenr += 1
 
-        # Chomp the last "\n"
-        if snippet['text'] and snippet['text'][-1] == '\n':
-            snippet['text'] = snippet['text'][:-1]
         return snippet
 
     def parse_tabstop(self, line: str, text_linenr: int

@@ -107,7 +107,7 @@ class Mapping():
         cursor = self._vim.current.window.cursor
         linenr = cursor[0]
         buf = self._vim.current.buffer
-        next_text = self._vim.call('deoppet#util#_get_next_text')
+        next_text = self._vim.call('deoppet#util#_get_next_text', prev_text)
 
         base_indent = ''
         m = re.match(r'\s+', prev_text)
@@ -172,9 +172,11 @@ class Mapping():
     def expand_eval(self, ev: typing.Dict[str, typing.Any]) -> None:
         buf = self._vim.current.buffer
         mark_begin = buf.api.get_extmark_by_id(self._ns, ev['id_begin'])
-        if not mark_begin or mark_begin[0] >= len(buf):
+        if (not mark_begin or mark_begin[0] >= len(buf) or
+                mark_begin[1] > len(buf[mark_begin[0]])):
             # Overflow
             return
+
         next_text = buf[mark_begin[0]][mark_begin[1]:]
         self.cursor(mark_begin[0] + 1, mark_begin[1], next_text)
 
@@ -200,16 +202,14 @@ class Mapping():
 
             if bvars['deoppet_expand_state']['snippet']:
                 self.jump(is_forward)
-            else:
-                self.nop()
             return
 
         tabstop = tabstops[mark_pos]
         mark_begin = buf.api.get_extmark_by_id(self._ns, tabstop['id_begin'])
-        if not mark_begin or mark_begin[0] > len(buf):
+        if (not mark_begin or mark_begin[0] >= len(buf) or
+                mark_begin[1] > len(buf[mark_begin[0]])):
             # Overflow
             self.clear()
-            self.nop()
             return
 
         next_text = buf[mark_begin[0]][mark_begin[1]:]
@@ -258,15 +258,10 @@ class Mapping():
             'snippet': state['snippet'],
         }
 
-    def nop(self) -> None:
-        return self.cursor(self._vim.current.window.cursor[0],
-                           self._vim.current.window.cursor[1],
-                           self._vim.call('deoppet#util#_get_next_text'))
-
     def cursor(self, linenr: int, col: int, next_text: str) -> None:
         if next_text:
-            self._vim.call('cursor', [linenr, col + 1])
             self._vim.command('startinsert')
+            self._vim.call('cursor', [linenr, col + 1])
         else:
             self._vim.call('cursor', [linenr, col])
             self._vim.command('startinsert!')

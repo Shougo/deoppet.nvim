@@ -42,11 +42,10 @@ function! deoppet#util#_get_cur_text() abort
   return
         \ (mode() ==# 'i' ? (col('.')-1) : col('.')) >= len(getline('.')) ?
         \      getline('.') :
-        \      matchstr(getline('.'),
-        \         '^.*\%' . col('.') . 'c' . (mode() ==# 'i' ? '' : '.'))
+        \      matchstr(getline('.'), '^.*\%' . col('.') . 'c')
 endfunction
-function! deoppet#util#_get_next_text() abort
-  return getline('.')[len(deoppet#util#_get_cur_text()) :]
+function! deoppet#util#_get_next_text(prev_text) abort
+  return getline('.')[len(a:prev_text) :]
 endfunction
 
 function! deoppet#util#_get_cursor_snippet(snippets, cur_text) abort
@@ -99,7 +98,7 @@ function! deoppet#util#_insert_text(text, next_text) abort
     setlocal nocindent
     setlocal indentexpr=
 
-    execute 'normal!' (a:next_text ==# '' ? 'A' : 'i') . a:text
+    execute 'normal!' (a:next_text ==# '' ? 'A' : 'a') . a:text
   finally
     let &l:autoindent = save_autoindent
     let &l:smartindent = save_smartindent
@@ -110,7 +109,8 @@ function! deoppet#util#_insert_text(text, next_text) abort
   stopinsert
 endfunction
 function! deoppet#util#_remove_trigger(trigger) abort
-  execute 'normal!' 'a' . repeat("\<C-h>", strchars(a:trigger))
+  execute 'normal!' (col('.') + 1 >= col('$') ? 'a' : 'i')
+        \ . repeat("\<C-h>", strchars(a:trigger))
   stopinsert
 endfunction
 function! deoppet#util#_select_pos(pos) abort

@@ -37,7 +37,7 @@ endfunction
 function! s:trigger(function) abort
   let [cur_text, col, expr] = s:pre_trigger()
 
-  let expr .= printf("\<ESC>:call %s(%s)\<CR>",
+  let expr .= printf("\<C-o>:call %s(%s)\<CR>",
         \ '_deoppet_mapping', string(a:function))
 
   return expr
