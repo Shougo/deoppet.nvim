@@ -98,7 +98,7 @@ function! deoppet#util#_insert_text(text, next_text) abort
     setlocal nocindent
     setlocal indentexpr=
 
-    execute 'normal!' (a:next_text ==# '' ? 'A' : 'a') . a:text
+    execute 'normal!' (a:next_text ==# '' ? 'A' : 'i') . a:text
   finally
     let &l:autoindent = save_autoindent
     let &l:smartindent = save_smartindent
