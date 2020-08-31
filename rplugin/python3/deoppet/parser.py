@@ -111,9 +111,10 @@ class Parser():
                 snippet['abbr'] = m.group(1)
                 continue
 
-            m = re.search(r'^alias\s+(\S+)', line)
+            m = re.search(r'^alias\s+(\S.*)', line)
             if m:
-                snippet['alias'] = m.group(1)
+                snippet['alias'] = [a for a in re.split(r',|\s+', m.group(1))
+                                    if a]
                 continue
 
             m = re.search(r"^regexp\s+'([^']+)'", line)

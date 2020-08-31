@@ -58,7 +58,7 @@ snippet    bar
     test_snippet3 = """
 snippet    foo
 abbr       bar
-alias      baz
+alias      baz qux
 regexp     '^% '
 options    word
     foobar
@@ -68,7 +68,7 @@ options    word
         'foo': {
             'trigger': 'foo',
             'abbr': 'bar',
-            'alias': 'baz',
+            'alias': ['baz', 'qux'],
             'regexp': '^% ',
             'options': {'word': True},
             'text': 'foobar',
