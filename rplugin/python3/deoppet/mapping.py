@@ -136,8 +136,7 @@ class Mapping():
             else:
                 tabstop_col += len(base_indent)
             mark_id = buf.api.set_extmark(
-                self._ns, 0,
-                tabstop['row'] + linenr - 1, tabstop_col, {})
+                self._ns, tabstop['row'] + linenr - 1, tabstop_col, {})
             tabstop['id_begin'] = mark_id
             tabstop['id_end'] = mark_id
             tabstops.append(tabstop)
@@ -146,8 +145,7 @@ class Mapping():
             if ev['row'] == 0:
                 ev_col += self._vim.call('len', prev_text)
             mark_id = buf.api.set_extmark(
-                self._ns, 0,
-                ev['row'] + linenr - 1, ev_col, {})
+                self._ns, ev['row'] + linenr - 1, ev_col, {})
             ev['id_begin'] = mark_id
             ev['id_end'] = mark_id
             evals.append(ev)
@@ -171,7 +169,8 @@ class Mapping():
 
     def expand_eval(self, ev: typing.Dict[str, typing.Any]) -> None:
         buf = self._vim.current.buffer
-        mark_begin = buf.api.get_extmark_by_id(self._ns, ev['id_begin'])
+        mark_begin = buf.api.get_extmark_by_id(
+            self._ns, ev['id_begin'], {})
         if (not mark_begin or mark_begin[0] >= len(buf) or
                 mark_begin[1] > len(buf[mark_begin[0]])):
             # Overflow
@@ -205,7 +204,8 @@ class Mapping():
             return
 
         tabstop = tabstops[mark_pos]
-        mark_begin = buf.api.get_extmark_by_id(self._ns, tabstop['id_begin'])
+        mark_begin = buf.api.get_extmark_by_id(
+            self._ns, tabstop['id_begin'], {})
         if (not mark_begin or mark_begin[0] >= len(buf) or
                 mark_begin[1] > len(buf[mark_begin[0]])):
             # Overflow
@@ -224,7 +224,7 @@ class Mapping():
         # Default
         if tabstop['default']:
             mark_end = buf.api.get_extmark_by_id(
-                self._ns, tabstop['id_end'])
+                self._ns, tabstop['id_end'], {})
             if mark_begin == mark_end:
                 default = tabstop['default']
                 if default == 'TARGET':
@@ -243,9 +243,10 @@ class Mapping():
                     buf.api.del_extmark(self._ns, tabstop['id_begin'])
                     buf.api.del_extmark(self._ns, tabstop['id_end'])
                     tabstop['id_begin'] = buf.api.set_extmark(
-                        self._ns, 0, mark_begin[0], mark_begin[1], {})
+                        self._ns, mark_begin[0], mark_begin[1], {})
                     tabstop['id_end'] = buf.api.set_extmark(
-                        self._ns, 0, self._vim.call('line', '.') - 1,
+                        self._ns,
+                        self._vim.call('line', '.') - 1,
                         self._vim.call('col', '.') - 1, {})
             else:
                 # Select begin to end.
