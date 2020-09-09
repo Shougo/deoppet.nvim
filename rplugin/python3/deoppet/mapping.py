@@ -74,6 +74,12 @@ class Mapping():
             return
 
         snippet = snippets[trigger]
+
+        if snippet['options'].get('head'):
+            m = re.search(r'^\s*(\S+)$', cur_text)
+            if not m or m.group(1) != snippet['trigger']:
+                return
+
         if snippet['regexp']:
             if not self._vim.call(
                     'matchstr', cur_text, snippet['regexp']):
