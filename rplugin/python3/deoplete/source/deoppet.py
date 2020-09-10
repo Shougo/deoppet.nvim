@@ -30,11 +30,12 @@ class Source(Base):
             snippets = [x for x in snippets if x['options']['word']]
         candidates = []
         for x in snippets:
+            tmp = [{'word': w} for w in [x['trigger']] + x.get('alias', [])]
             if x['options'].get('head'):
                 m = re.search(r'^\s*(\S+)$', context['input'])
                 if m and m.group(1) in x['trigger']:
-                    candidates += [{'word': x['trigger']}]
+                    candidates += tmp
             elif not x['regexp'] or self.vim.call(
                     'matchstr', context['input'], x['regexp']):
-                candidates += [{'word': x['trigger']}]
+                candidates += tmp
         return candidates

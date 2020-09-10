@@ -4,6 +4,7 @@
 # License: MIT license
 # ============================================================================
 
+import copy
 import glob
 import typing
 
@@ -72,5 +73,9 @@ class Deoppet():
                     with open(filename) as f:
                         parser = Parser(self._vim, filename)
                         snippets.update(parser.parse(f.read()))
+
+        for s in copy.deepcopy(snippets).values():
+            for a in s.get('alias', []):
+                snippets[a] = s
         # debug(self._vim, snippets)
         buf.vars['deoppet_snippets'] = snippets
