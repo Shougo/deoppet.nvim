@@ -28,6 +28,13 @@ class Source(Base):
         snippets = bvars['deoppet_snippets'].values()
         if m1 and m2 and m1.group(0) != m2.group(0):
             snippets = [x for x in snippets if x['options']['word']]
-        return [{'word': x['trigger']} for x in
-                snippets if not x['regexp'] or self.vim.call(
-                    'matchstr', context['input'], x['regexp'])]
+        candidates = []
+        for x in snippets:
+            if x['options'].get('head'):
+                m = re.search(r'^\s*(\S+)$', context['input'])
+                if m and m.group(1) in x['trigger']:
+                    candidates += [{'word': x['trigger']}]
+            elif not x['regexp'] or self.vim.call(
+                    'matchstr', context['input'], x['regexp']):
+                candidates += [{'word': x['trigger']}]
+        return candidates
