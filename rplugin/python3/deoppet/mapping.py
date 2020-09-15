@@ -135,14 +135,24 @@ class Mapping():
         tabstops = []
         evals = []
         self._ns = self._vim.api.create_namespace('deoppet')
+        split_text = snippet['text'].split('\n')
         for tabstop in copy.deepcopy(snippet['tabstops']):
             tabstop_col = tabstop['col']
+
+            # Expand tab
+            if options['expandtab']:
+                tab_count = split_text[tabstop['row']].count(
+                    '\t', 0, tabstop_col)
+                tabstop_col += (self._vim.call('shiftwidth') - 1) * tab_count
+
             if tabstop['row'] == 0:
                 tabstop_col += self._vim.call('len', prev_text)
             else:
                 tabstop_col += len(base_indent)
             mark_id = buf.api.set_extmark(
                 self._ns, tabstop['row'] + linenr - 1, tabstop_col, {})
+            self.debug(tabstop)
+            self.debug(tabstop_col)
             tabstop['id_begin'] = mark_id
             tabstop['id_end'] = mark_id
             tabstops.append(tabstop)
