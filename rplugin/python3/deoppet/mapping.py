@@ -151,8 +151,6 @@ class Mapping():
                 tabstop_col += len(base_indent)
             mark_id = buf.api.set_extmark(
                 self._ns, tabstop['row'] + linenr - 1, tabstop_col, {})
-            self.debug(tabstop)
-            self.debug(tabstop_col)
             tabstop['id_begin'] = mark_id
             tabstop['id_end'] = mark_id
             tabstops.append(tabstop)
