@@ -28,18 +28,18 @@ class Source(Base):
         snippets = bvars['deoppet_snippets'].values()
         if m1 and m2 and m1.group(0) != m2.group(0):
             snippets = [x for x in snippets if x['options']['word']]
-        candidates = []
+        ret = []
         for x in snippets:
             menu = x.get('abbr') or x.get('text')
-            tmp = [
+            snippet_candidates = [
                 {'word': w, 'menu': menu}
                 for w in [x['trigger']] + x.get('alias', [])
             ]
             if x['options'].get('head'):
                 m = re.search(r'^\s*(\S+)$', context['input'])
                 if m and m.group(1) in x['trigger']:
-                    candidates += tmp
+                    ret += snippet_candidates
             elif not x['regexp'] or self.vim.call(
                     'matchstr', context['input'], x['regexp']):
-                candidates += tmp
-        return candidates
+                ret += snippet_candidates
+        return ret
