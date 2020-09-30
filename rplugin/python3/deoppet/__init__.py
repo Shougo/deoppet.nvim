@@ -36,7 +36,7 @@ if hasattr(vim, 'plugin'):
 
         @vim.function('_deoppet_mapping', sync=True)  # type: ignore
         def mapping(self, args: typing.List[str]) -> None:
-            self._deoppet.mapping(args[0])
+            self._deoppet.mapping(args[0], args[1])
 
         @vim.function('_deoppet_event', sync=True)  # type: ignore
         def event(self, args: typing.List[str]) -> None:

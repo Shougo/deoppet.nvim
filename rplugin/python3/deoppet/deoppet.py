@@ -34,8 +34,8 @@ class Deoppet():
     def debug(self, expr: typing.Any) -> None:
         debug(self._vim, expr)
 
-    def mapping(self, name: str) -> None:
-        return self._mapping.mapping(name)
+    def mapping(self, name: str, cur_text: str) -> None:
+        return self._mapping.mapping(name, cur_text)
 
     def expand(self, trigger: str) -> None:
         return self._mapping.expand(

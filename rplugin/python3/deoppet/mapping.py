@@ -48,7 +48,7 @@ class Mapping():
         }
         self._vim.vars['deoppet#captures'] = []
 
-    def mapping(self, name: str) -> None:
+    def mapping(self, name: str, cur_text: str) -> None:
         bvars = self._vim.current.buffer.vars
         if 'deoppet_expand_state' not in bvars:
             self.clear()
@@ -58,16 +58,15 @@ class Mapping():
         if name == 'clear':
             return self.clear()
         if name == 'expand':
-            return self.expand_current_trigger()
+            return self.expand_current_trigger(cur_text)
         if name == 'jump_forward':
             return self.jump(True)
         if name == 'jump_backward':
             return self.jump(False)
         return
 
-    def expand_current_trigger(self) -> None:
+    def expand_current_trigger(self, cur_text: str) -> None:
         snippets = self._vim.current.buffer.vars['deoppet_snippets']
-        cur_text = self._vim.call('deoppet#util#_get_cur_text')
         trigger = self._vim.call('deoppet#util#_get_cursor_snippet',
                                  snippets, cur_text)
         if not trigger:
