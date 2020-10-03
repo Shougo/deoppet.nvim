@@ -90,7 +90,8 @@ class Mapping():
                 'matchlist', cur_text, snippet['regexp'])
 
         prev_text = cur_text[: len(cur_text) - len(trigger)]
-        self._vim.call('deoppet#util#_remove_trigger', trigger)
+        next_text = self._vim.call('getline', '.')[len(cur_text):]
+        self._vim.call('deoppet#util#_remove_trigger', trigger, next_text)
         return self.expand(trigger, prev_text)
 
     def expand(self, trigger: str, prev_text: str) -> None:

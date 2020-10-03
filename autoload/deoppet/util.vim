@@ -98,7 +98,7 @@ function! deoppet#util#_insert_text(text, next_text) abort
     setlocal nocindent
     setlocal indentexpr=
 
-    execute 'normal!' (a:next_text ==# '' ? 'A' : 'i') . a:text
+    noautocmd execute 'normal!' (a:next_text ==# '' ? 'A' : 'a') . a:text
   finally
     let &l:autoindent = save_autoindent
     let &l:smartindent = save_smartindent
@@ -108,8 +108,8 @@ function! deoppet#util#_insert_text(text, next_text) abort
 
   stopinsert
 endfunction
-function! deoppet#util#_remove_trigger(trigger) abort
-  execute 'normal!' (col('.') + 1 >= col('$') ? 'a' : 'i')
+function! deoppet#util#_remove_trigger(trigger, next_text) abort
+  execute 'normal!' (a:next_text ==# '' ? 'A' : 'i')
         \ . repeat("\<C-h>", strchars(a:trigger))
   stopinsert
 endfunction
