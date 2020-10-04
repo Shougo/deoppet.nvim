@@ -23,13 +23,8 @@ endfunction
 
 function! s:pre_trigger() abort
   let cur_text = deoppet#util#_get_cur_text()
-
-  let col = col('.')
+  let col = col("'^")
   let expr = ''
-  if mode() !=# 'i'
-    " Fix column.
-    let col += 2
-  endif
 
   return [cur_text, col, expr]
 endfunction
@@ -37,8 +32,8 @@ endfunction
 function! s:trigger(function) abort
   let [cur_text, col, expr] = s:pre_trigger()
 
-  let expr .= printf("\<ESC>:call %s(%s, %s)\<CR>",
-        \ '_deoppet_mapping', string(a:function), string(cur_text))
+  let expr .= printf("\<ESC>:call %s(%s, %s, %d)\<CR>",
+        \ '_deoppet_mapping', string(a:function), string(cur_text), col)
 
   return expr
 endfunction
