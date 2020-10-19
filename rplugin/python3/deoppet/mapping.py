@@ -129,8 +129,9 @@ class Mapping():
             texts = [x.replace('\t', ' ' * self._vim.call('shiftwidth'))
                      for x in texts]
 
+        self.cursor(cursor[0], cursor[1], next_text)
         self._vim.call('deoppet#util#_insert_text',
-                       '\n'.join(texts), next_text)
+                       '\n'.join(texts), prev_text, next_text)
 
         tabstops = []
         evals = []
@@ -194,7 +195,8 @@ class Mapping():
         self.cursor(mark_begin[0] + 1, mark_begin[1], next_text)
 
         self._vim.call('deoppet#util#_insert_text',
-                       self._vim.call('eval', ev['expr']), next_text)
+                       self._vim.call('eval', ev['expr']),
+                       '', next_text)
 
     def jump(self, is_forward: bool) -> None:
         bvars = self._vim.current.buffer.vars
@@ -226,6 +228,7 @@ class Mapping():
             self.clear()
             return
 
+        prev_text = buf[mark_begin[0]][:mark_begin[1]]
         next_text = buf[mark_begin[0]][mark_begin[1]:]
         self.cursor(mark_begin[0] + 1, mark_begin[1], next_text)
 
@@ -251,7 +254,8 @@ class Mapping():
                         in enumerate(default.split('\n'))]
 
                     self._vim.call('deoppet#util#_select_text',
-                                   '\n'.join(default_lines), next_text)
+                                   '\n'.join(default_lines),
+                                   prev_text, next_text)
 
                     # Update marks
                     buf.api.del_extmark(self._ns, tabstop['id_begin'])

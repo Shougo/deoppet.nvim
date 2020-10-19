@@ -66,7 +66,7 @@ function! deoppet#util#_get_cursor_snippet(snippets, cur_text) abort
   return cur_word
 endfunction
 
-function! deoppet#util#_select_text(text, next_text) abort
+function! deoppet#util#_select_text(text, prev_text, next_text) abort
   let len = len(a:text) - 1
   if &l:selection ==# 'exclusive'
     let len += 1
@@ -76,7 +76,7 @@ function! deoppet#util#_select_text(text, next_text) abort
 
   " Insert the text
   let pos = getpos('.')
-  call deoppet#util#_insert_text(a:text, a:next_text)
+  call deoppet#util#_insert_text(a:text, a:prev_text, a:next_text)
   let next_pos = getpos('.')
 
   " Select the text
@@ -85,7 +85,7 @@ function! deoppet#util#_select_text(text, next_text) abort
   call setpos('.', next_pos)
   execute 'normal! ' "\<C-g>"
 endfunction
-function! deoppet#util#_insert_text(text, next_text) abort
+function! deoppet#util#_insert_text(text, prev_text,next_text) abort
   let save_autoindent = &l:autoindent
   let save_smartindent = &l:smartindent
   let save_cindent = &l:cindent
@@ -98,7 +98,8 @@ function! deoppet#util#_insert_text(text, next_text) abort
     setlocal nocindent
     setlocal indentexpr=
 
-    noautocmd execute 'normal!' (a:next_text ==# '' ? 'A' : 'i') . a:text
+    let map = a:next_text ==# '' ? 'A' : a:prev_text ==# '' ? 'i' : 'a'
+    noautocmd execute 'normal!' map . a:text
   finally
     let &l:autoindent = save_autoindent
     let &l:smartindent = save_smartindent
@@ -109,7 +110,7 @@ function! deoppet#util#_insert_text(text, next_text) abort
   stopinsert
 endfunction
 function! deoppet#util#_remove_trigger(trigger, next_text) abort
-  execute 'normal!' (a:next_text ==# '' ? 'A' : 'a')
+  noautocmd execute 'normal!' (a:next_text ==# '' ? 'A' : 'a')
         \ . repeat("\<C-h>", strchars(a:trigger))
   stopinsert
 endfunction
