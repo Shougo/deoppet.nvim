@@ -194,6 +194,7 @@ class Mapping():
         next_text = buf[mark_begin[0]][mark_begin[1]:]
         self.cursor(mark_begin[0] + 1, mark_begin[1], next_text)
 
+        # Note: prev_text must be empty to insert text correctly
         self._vim.call('deoppet#util#_insert_text',
                        self._vim.call('eval', ev['expr']),
                        '', next_text)
@@ -253,9 +254,10 @@ class Mapping():
                         (base_indent if num != 0 else '') + x for num, x
                         in enumerate(default.split('\n'))]
 
+                    # Note: prev_text must be empty to insert text correctly
                     self._vim.call('deoppet#util#_select_text',
                                    '\n'.join(default_lines),
-                                   prev_text, next_text)
+                                   '', next_text)
 
                     # Update marks
                     buf.api.del_extmark(self._ns, tabstop['id_begin'])
