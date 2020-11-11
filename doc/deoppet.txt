@@ -110,11 +110,18 @@ ft_snippets_map
 <
 		Default: {}
 
-						*deoppet-options-snippets_dir*
-snippets_dirs
-		Snippets directories list.
+						*deoppet-options-snippets*
+snippets
+		Snippets directory information dictionaries list.
+
 		Note: deoppet does not include any of default snippets.
 		To load snippets, you need to set the option.
+
+		Snippets dictionary has following keys:
+
+			path		(String)	(Required)
+				The snippets directory path.
+				Note: It must be full path.
 
 		Default: []
 
@@ -130,8 +137,9 @@ EXAMPLES						*deoppet-examples*
 	xmap <C-x>  <Plug>(deoppet_cut_text)
 
 	call deoppet#initialize()
-	call deoppet#custom#option('snippets_dirs',
-	\ globpath(&runtimepath, 'neosnippets', 1, 1))
+	call deoppet#custom#option('snippets',
+		\ map(globpath(&runtimepath, 'neosnippets', 1, 1),
+		\     "{ 'path': v:val }"))
 <
 ==============================================================================
 FREQUENTLY ASKED QUESTIONS (FAQ)			*deoppet-faq*
@@ -149,6 +157,9 @@ A: Please use "g:deoppet#captures" variable for it.
 <
 ==============================================================================
 COMPATIBILITY					*deoppet-compatibility*
+
+2020.04.10
+* Replace "snippets_dirs" option to "snippets" to expand it in the future.
 
 ==============================================================================
 vim:tw=78:ts=8:ft=help:norl:noet:fen:noet:

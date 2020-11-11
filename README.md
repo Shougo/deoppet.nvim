@@ -59,8 +59,9 @@ If Deoppet was installed prior to Python support being added to Neovim,
 
 ```vim
 	call deoppet#initialize()
-	call deoppet#custom#option('snippets_dirs',
-	\ globpath(&runtimepath, 'neosnippets', 1, 1))
+	call deoppet#custom#option('snippets',
+	\ map(globpath(&runtimepath, 'neosnippets', 1, 1),
+	\     "{ 'path': v:val }"))
 
 	imap <C-k>  <Plug>(deoppet_expand)
 	imap <C-f>  <Plug>(deoppet_jump_forward)

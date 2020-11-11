@@ -55,8 +55,8 @@ class Deoppet():
             'deoppet#util#_get_context_filetype')
         if not filetype:
             filetype = 'nothing'
-        snippets_dirs = self._vim.call(
-            'deoppet#custom#_get_option', 'snippets_dirs')
+        snippets_dirs = [x['path'] for x in self._vim.call(
+            'deoppet#custom#_get_option', 'snippets')]
         ft_snippets_map = self._vim.call(
             'deoppet#custom#_get_option', 'ft_snippets_map')
         if filetype in ft_snippets_map:
