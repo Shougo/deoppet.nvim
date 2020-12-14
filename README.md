@@ -1,6 +1,8 @@
 deoppet.nvim
 ============
 
+Please read [help](doc/denite.txt) for details.
+
 [![Join the chat at https://gitter.im/Shougo/deoppet.nvim](https://badges.gitter.im/Shougo/deoppet.nvim.svg)](https://gitter.im/Shougo/deoppet.nvim?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Warning: This is alpha version!  It is not intended to use for daily work.
