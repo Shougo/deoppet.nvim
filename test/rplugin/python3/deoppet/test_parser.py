@@ -120,11 +120,11 @@ options     head
             'tabstops': [
                 {
                     'number': 1, 'row': 0, 'col': 3,
-                    'default': '#:condition', 'comment': ''
+                    'default': '', 'comment': ''
                  },
                 {
                     'number': 0, 'row': 1, 'col': 2,
-                    'default': 'TARGET', 'comment': ''
+                    'default': '', 'comment': ''
                 },
             ],
             'evals': [],
