@@ -229,7 +229,6 @@ class Mapping():
             self.clear()
             return
 
-        prev_text = buf[mark_begin[0]][:mark_begin[1]]
         next_text = buf[mark_begin[0]][mark_begin[1]:]
         self.cursor(mark_begin[0] + 1, mark_begin[1], next_text)
 
