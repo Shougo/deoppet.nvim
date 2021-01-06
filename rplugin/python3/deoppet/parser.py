@@ -128,7 +128,7 @@ class Parser():
                     snippet['options'][option] = True
                 continue
 
-            m = re.search(r'^(\s+)(.*)$', line)
+            m = re.search(r'^(\s+).*$', line)
             if m:
                 return self.parse_text(snippet, m.group(1))
 
@@ -144,6 +144,7 @@ class Parser():
             line = self._lines[self._linenr]
             if not line:
                 # Skip
+                snippet['text'] += '\n'
                 self._linenr += 1
                 text_linenr += 1
                 continue
@@ -175,6 +176,8 @@ class Parser():
             self._linenr += 1
             text_linenr += 1
 
+        if snippet['text'].endswith('\n'):
+            snippet['text'] = snippet['text'][:-1]
         return snippet
 
     def parse_tabstop(self, line: str, text_linenr: int
