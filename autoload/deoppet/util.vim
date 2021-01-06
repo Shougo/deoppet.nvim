@@ -90,6 +90,7 @@ function! deoppet#util#_insert_text(text, prev_text,next_text) abort
   let save_smartindent = &l:smartindent
   let save_cindent = &l:cindent
   let save_indentexpr = &l:indentexpr
+  let save_formatoptions = &l:formatoptions
 
   try
     " Disable all auto indent
@@ -97,6 +98,8 @@ function! deoppet#util#_insert_text(text, prev_text,next_text) abort
     setlocal nosmartindent
     setlocal nocindent
     setlocal indentexpr=
+    setlocal formatoptions-=r
+    setlocal formatoptions-=o
 
     let map = a:next_text ==# '' ? 'A' : a:prev_text ==# '' ? 'i' : 'a'
     noautocmd execute 'normal!' map . a:text
@@ -105,6 +108,7 @@ function! deoppet#util#_insert_text(text, prev_text,next_text) abort
     let &l:smartindent = save_smartindent
     let &l:cindent = save_cindent
     let &l:indentexpr = save_indentexpr
+    let &l:formatoptions = save_formatoptions
   endtry
 
   stopinsert

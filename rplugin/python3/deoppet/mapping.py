@@ -137,7 +137,12 @@ class Mapping():
         evals = []
         self._ns = self._vim.api.create_namespace('deoppet')
         split_text = snippet['text'].split('\n')
-        for tabstop in copy.deepcopy(snippet['tabstops']):
+        max_tabstop = max([x['number'] for x in snippet['tabstops']],
+                          default=0) + 1
+        sorted_tabstops = sorted(snippet['tabstops'],
+                                 key=lambda x: int(x['number'])
+                                 if x['number'] > 0 else max_tabstop)
+        for tabstop in copy.deepcopy(sorted_tabstops):
             tabstop_col = tabstop['col']
 
             # Expand tab
