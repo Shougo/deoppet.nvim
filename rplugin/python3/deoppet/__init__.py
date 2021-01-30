@@ -29,6 +29,7 @@ if hasattr(vim, 'plugin'):
         def init_channel(self, args: typing.List[str]) -> None:
             self._vim.vars['deoppet#_channel_id'] = self._vim.channel_id
             self._deoppet = Deoppet(self._vim)
+            self._deoppet.event('FileType')
 
         @vim.function('_deoppet_expand', sync=True)  # type: ignore
         def expand(self, args: typing.List[str]) -> None:

@@ -40,7 +40,6 @@ function! deoppet#init#_channel() abort
       endif
 
       call _deoppet_init()
-      call _deoppet_event('FileType')
     endif
   catch
     call deoppet#util#print_error(v:exception)
