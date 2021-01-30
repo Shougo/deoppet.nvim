@@ -16,6 +16,8 @@ function! deoppet#init#_initialize() abort
   augroup deoppet
     autocmd!
   augroup END
+
+  call _deoppet_event('FileType')
 endfunction
 function! deoppet#init#_channel() abort
   if !has('python3')
