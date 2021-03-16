@@ -44,6 +44,7 @@ class Deoppet():
     def event(self, name: str) -> None:
         self._vim.call('deoppet#custom#_update_cache')
 
+        buf = self._vim.current.buffer
         if name == 'FileType' or (name == 'InsertEnter' and
                                   'deoppet_snippets' not in buf.vars):
             return self._load_snippets()
