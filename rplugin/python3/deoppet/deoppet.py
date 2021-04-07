@@ -48,7 +48,7 @@ class Deoppet():
         if name == 'FileType' or (name == 'InsertEnter' and
                                   'deoppet_snippets' not in buf.vars):
             return self._load_snippets()
-        else:
+        elif name == 'BufWritePost':
             return self._mapping.clear()
 
     def _load_snippets(self) -> None:
