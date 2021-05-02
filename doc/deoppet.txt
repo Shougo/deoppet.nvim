@@ -139,7 +139,7 @@ EXAMPLES						*deoppet-examples*
 	call deoppet#initialize()
 	call deoppet#custom#option('snippets',
 		\ map(globpath(&runtimepath, 'neosnippets', 1, 1),
-		\     "{ 'path': v:val }"))
+		\     { _, val -> { 'path': val } }))
 <
 ==============================================================================
 FREQUENTLY ASKED QUESTIONS (FAQ)			*deoppet-faq*
