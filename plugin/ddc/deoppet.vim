@@ -9,7 +9,7 @@ if exists('g:loaded_ddc_deoppet')
 endif
 let g:loaded_ddc_deoppet = 1
 
-call ddc#register_source({
+silent! call ddc#register_source({
       \ 'name': 'deoppet',
       \ 'path': fnamemodify(expand('<sfile>'), ':h:h:h')
       \         . '/denops/ddc/sources/deoppet.ts',
