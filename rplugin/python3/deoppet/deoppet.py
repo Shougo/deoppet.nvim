@@ -64,7 +64,7 @@ class Deoppet():
         if filetype in ft_snippets_map:
             fts = ft_snippets_map[filetype]
         else:
-            fts = filetype.split(',')
+            fts = filetype.split('.')
 
         snippets: typing.Dict[str, Snippet] = {}
         for dir in snippets_dirs:
