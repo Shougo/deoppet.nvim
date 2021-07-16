@@ -1,11 +1,18 @@
 import {
   BaseSource,
   Candidate,
-} from "https://deno.land/x/ddc_vim@v0.0.1/base/source.ts";
-import { Denops } from "https://deno.land/x/ddc_vim@v0.0.1/base/deps.ts";
+  Context,
+  Denops,
+  SourceOptions,
+} from "https://deno.land/x/ddc_vim@v0.0.4/types.ts";
 
 export class Source extends BaseSource {
-  async gatherCandidates(denops: Denops): Promise<Candidate[]> {
+  async gatherCandidates(
+    denops: Denops,
+    _context: Context,
+    _options: SourceOptions,
+    _params: Record<string, unknown>,
+  ): Promise<Candidate[]> {
     return [];
   }
 }

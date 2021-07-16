@@ -1,16 +1,12 @@
-"=============================================================================
-" FILE: deoppet.vim
-" AUTHOR:  Shougo Matsushita <Shougo.Matsu at gmail.com>
-" License: MIT license
-"=============================================================================
+let s:name = fnamemodify(expand('<sfile>'), ':t:r')
 
-if exists('g:loaded_ddc_deoppet')
+if exists('g:loaded_ddc_' . s:name)
   finish
 endif
-let g:loaded_ddc_deoppet = 1
+let g:loaded_ddc_{s:name} = 1
 
 silent! call ddc#register_source({
-      \ 'name': 'deoppet',
-      \ 'path': fnamemodify(expand('<sfile>'), ':h:h:h')
-      \         . '/denops/ddc/sources/deoppet.ts',
+      \ 'name': s:name,
+      \ 'path': printf('%s/denops/ddc/sources/%s.ts',
+      \                fnamemodify(expand('<sfile>'), ':h:h:h'), s:name),
       \ })
