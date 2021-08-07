@@ -4,7 +4,7 @@ import {
   Context,
   Denops,
   SourceOptions,
-} from "https://deno.land/x/ddc_vim@v0.0.4/types.ts";
+} from "https://deno.land/x/ddc_vim@v0.0.11/types.ts";
 
 export class Source extends BaseSource {
   async gatherCandidates(
