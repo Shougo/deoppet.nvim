@@ -155,6 +155,18 @@ A: Please use "g:deoppet#captures" variable for it.
 	regexp     '\(\w\+\)s\.map$'
 	    .map(`g:deoppet#captures[1]` => ${0})
 
+Q. How to enable neco-vim the completion in ddc.vim?
+
+A.
+>
+	call ddc#custom#patch_global('sources', ['deoppet'])
+	call ddc#custom#patch_global('sourceOptions', {
+	    \ '_': {
+	    \   'matchers': ['matcher_head'],
+	    \   'sorters': ['sorter_rank']
+	    \ },
+	    \ 'deoppet': {'mark': 'dp'},
+	    \ })
 <
 ==============================================================================
 COMPATIBILITY					*deoppet-compatibility*
