@@ -27,9 +27,7 @@ export class Source extends BaseSource {
 
     const wordMatch = /\w+$/.exec(context.input);
     const charsMatch = /\S+$/.exec(context.input);
-    if (wordMatch && charsMatch && wordMatch[0] != charsMatch[0]) {
-      snippets = snippets.filter((v) => v.options.word);
-    }
+    const isWord = wordMatch && charsMatch && wordMatch[0] != charsMatch[0];
 
     let ret = [];
     for (const key in snippets) {
@@ -43,8 +41,9 @@ export class Source extends BaseSource {
         }));
 
       if (
-        (val.options.head && /^\s*\S+$/.test(context.input)) || !val.regexp ||
-        await fn.matchstr(context.input, val.regexp) != ""
+        (!val.options.head || /^\s*\S+$/.test(context.input)) &&
+        (!val.options.word || isWord) &&
+        (!val.regexp || await fn.matchstr(context.input, val.regexp) != "")
       ) {
         ret = ret.concat(triggerCandidates);
       }
