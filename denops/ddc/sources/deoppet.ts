@@ -18,9 +18,9 @@ export class Source extends BaseSource {
     _ddcOptions: DdcOptions,
     _sourceOptions: SourceOptions,
     _sourceParams: Record<string, unknown>,
-    completeStr: string,
+    _completeStr: string,
   ): Promise<Candidate[]> {
-    let snippets = await vars.b.get(denops, "deoppet_snippets");
+    let snippets = await vars.b.get(denops, "deoppet_snippets") as Record<string, unknown>[];
     if (!snippets) {
       return [];
     }
@@ -29,7 +29,7 @@ export class Source extends BaseSource {
     const charsMatch = /\S+$/.exec(context.input);
     const isWord = wordMatch && charsMatch && wordMatch[0] != charsMatch[0];
 
-    let ret = [];
+    let ret: Candidate[] = [];
     for (const key in snippets) {
       const val = snippets[key];
       const menu = val.abbr ? val.abbr : val.text;
@@ -38,12 +38,13 @@ export class Source extends BaseSource {
         .map((v) => ({
           word: v,
           menu: menu,
+          dup: true,
         }));
 
       if (
         (!val.options.head || /^\s*\S+$/.test(context.input)) &&
         (!val.options.word || isWord) &&
-        (!val.regexp || await fn.matchstr(context.input, val.regexp) != "")
+        (!val.regexp || await fn.matchstr(denops, context.input, val.regexp) != "")
       ) {
         ret = ret.concat(triggerCandidates);
       }
