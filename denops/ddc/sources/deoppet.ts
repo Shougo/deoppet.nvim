@@ -29,7 +29,7 @@ export class Source extends BaseSource {
     const charsMatch = /\S+$/.exec(context.input);
     const isWord = wordMatch && charsMatch && wordMatch[0] != charsMatch[0];
 
-    let ret: Candidate[] = [];
+    let ret: Record<string, Candidate> = {};
     for (const key in snippets) {
       const val = snippets[key];
       const menu = val.abbr ? val.abbr : val.text.replaceAll(/\n/g, '');
@@ -46,9 +46,13 @@ export class Source extends BaseSource {
         (!val.options.word || isWord) &&
         (!val.regexp || await fn.matchstr(denops, context.input, val.regexp) != "")
       ) {
-        ret = ret.concat(triggerCandidates);
+        for (const candidate of triggerCandidates) {
+          if (!(candidate.word in ret)) {
+            ret[candidate.word] = candidate;
+          }
+        }
       }
     }
-    return ret;
+    return Object.values(ret);
   }
 }
