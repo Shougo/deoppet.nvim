@@ -4,6 +4,7 @@
 # License: MIT license
 # ============================================================================
 
+import glob
 import re
 import typing
 
@@ -15,13 +16,15 @@ Snippet = typing.Dict[str, typing.Any]
 
 class Parser():
 
-    def __init__(self, vim: Nvim, filename: str) -> None:
+    def __init__(self, vim: Nvim, filename: str,
+                 snippets_dirs: typing.List[str]) -> None:
         self._vim = vim
 
         self._lines: typing.List[str] = []
         self._linenr = 0
         self._line_max = 0
         self._filename = filename
+        self._snippets_dirs = snippets_dirs
 
     def debug(self, expr: typing.Any) -> None:
         debug(self._vim, expr)
@@ -62,7 +65,7 @@ class Parser():
             m = re.search(r'^\s*include\s+(\S+)$', line)
             if m:
                 # Include snippets file.
-                # Todo
+                snippets.update(self.include_snippets(m.group(1)))
                 self._linenr += 1
                 continue
             m = re.search(r'^\s*source\s+(\S+)$', line)
@@ -85,6 +88,18 @@ class Parser():
             # Error
             self.error(f'parse error in: {line}')
             return {}
+        return snippets
+
+    def include_snippets(self, base: str) -> typing.Dict[str, Snippet]:
+        snippets: typing.Dict[str, Snippet] = {}
+
+        for dir in self._snippets_dirs:
+            for filename in glob.glob(f'{dir}/{base}'):
+                # debug(self._vim, filename)
+                with open(filename) as f:
+                    parser = Parser(self._vim,
+                                    filename, self._snippets_dirs)
+                    snippets.update(parser.parse(f.read()))
         return snippets
 
     def parse_one_snippet(self) -> Snippet:

@@ -155,7 +155,7 @@ A: Please use "g:deoppet#captures" variable for it.
 	regexp     '\(\w\+\)s\.map$'
 	    .map(`g:deoppet#captures[1]` => ${0})
 
-Q. How to enable neco-vim the completion in ddc.vim?
+Q. How to enable deoppet the completion in ddc.vim?
 
 A.
 >

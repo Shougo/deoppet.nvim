@@ -73,7 +73,7 @@ class Deoppet():
                         f'{dir}/{ft}.snip') + glob.glob(f'{dir}/_.snip'):
                     # debug(self._vim, filename)
                     with open(filename) as f:
-                        parser = Parser(self._vim, filename)
+                        parser = Parser(self._vim, filename, snippets_dirs)
                         snippets.update(parser.parse(f.read()))
 
         for s in copy.deepcopy(snippets).values():

@@ -5,7 +5,7 @@ from unittest.mock import Mock
 
 def test_parse_success():
     vim = Mock()
-    parser = Parser(vim, 'test')
+    parser = Parser(vim, 'test', [])
 
     test_snippet0 = """
 """
@@ -142,7 +142,7 @@ options     head
 
 def test_parse_error():
     vim = Mock()
-    parser = Parser(vim, 'test')
+    parser = Parser(vim, 'test', [])
 
     test_snippet0 = """
 snippet bar
