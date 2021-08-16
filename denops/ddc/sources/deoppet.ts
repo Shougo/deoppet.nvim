@@ -32,7 +32,7 @@ export class Source extends BaseSource {
     let ret: Candidate[] = [];
     for (const key in snippets) {
       const val = snippets[key];
-      const menu = val.abbr ? val.abbr : val.text;
+      const menu = val.abbr ? val.abbr : val.text.replaceAll(/\n/g, '');
 
       const triggerCandidates = [val.trigger].concat(val.alias ? val.alias : [])
         .map((v) => ({
