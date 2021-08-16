@@ -59,7 +59,9 @@ class Parser():
             m = re.search(r'^\s*extends\s+(\S+)$', line)
             if m:
                 # Extend snippets files.
-                # Todo
+                for ft in m.group(1).split(r'\s*,\s*'):
+                    for snip in [ft + '.snip', ft + '.snippets', ft + '/*']:
+                        snippets.update(self.include_snippets(snip))
                 self._linenr += 1
                 continue
             m = re.search(r'^\s*include\s+(\S+)$', line)
@@ -71,7 +73,10 @@ class Parser():
             m = re.search(r'^\s*source\s+(\S+)$', line)
             if m:
                 # Source Vim script file.
-                # Todo
+                base = m.group(1)
+                for dir in self._snippets_dirs:
+                    for filename in glob.glob(f'{dir}/{base}'):
+                        self._vim.command(f'source {filename}')
                 self._linenr += 1
                 continue
 
