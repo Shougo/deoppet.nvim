@@ -20,7 +20,7 @@ export class Source extends BaseSource {
     _sourceParams: Record<string, unknown>,
     _completeStr: string,
   ): Promise<Candidate[]> {
-    let snippets = await vars.b.get(denops, "deoppet_snippets") as Record<string, unknown>[];
+    const snippets = await vars.b.get(denops, "deoppet_snippets") as Record<string, unknown>[];
     if (!snippets) {
       return [];
     }
@@ -29,10 +29,10 @@ export class Source extends BaseSource {
     const charsMatch = /\S+$/.exec(context.input);
     const isWord = wordMatch && charsMatch && wordMatch[0] != charsMatch[0];
 
-    let ret: Record<string, Candidate> = {};
+    const ret: Record<string, Candidate> = {};
     for (const key in snippets) {
       const val = snippets[key];
-      const menu = val.abbr ? val.abbr : val.text.replaceAll(/\n/g, '');
+      const menu = val.abbr ? (val.abbr as string) : val.text.replaceAll(/\n/g, '');
 
       const triggerCandidates = [val.trigger].concat(val.alias ? val.alias : [])
         .map((v) => ({
