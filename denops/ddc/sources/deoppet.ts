@@ -20,7 +20,10 @@ export class Source extends BaseSource {
     _sourceParams: Record<string, unknown>,
     _completeStr: string,
   ): Promise<Candidate[]> {
-    const snippets = await vars.b.get(denops, "deoppet_snippets") as Record<string, unknown>[];
+    const snippets = await vars.b.get(denops, "deoppet_snippets") as Record<
+      string,
+      unknown
+    >[];
     if (!snippets) {
       return [];
     }
@@ -29,26 +32,31 @@ export class Source extends BaseSource {
     const charsMatch = /\S+$/.exec(context.input);
     const isWord = wordMatch && charsMatch && wordMatch[0] != charsMatch[0];
 
-    const ret: Record<string, Candidate> = {};
+    const ret: Record<string, Candidate> = {} as Record<string, Candidate>;
     for (const key in snippets) {
       const val = snippets[key];
-      const menu = val.abbr ? (val.abbr as string) : val.text.replaceAll(/\n/g, '');
+      const menu = val.abbr
+        ? (val.abbr as string)
+        : (val.text as string).replaceAll(/\n/g, "");
 
       const triggerCandidates = [val.trigger].concat(val.alias ? val.alias : [])
         .map((v) => ({
-          word: v,
+          word: v as string,
           menu: menu,
           dup: true,
         }));
 
+      const options = val.options as Record<string, Candidate>;
       if (
-        (!val.options.head || /^\s*\S+$/.test(context.input)) &&
-        (!val.options.word || isWord) &&
-        (!val.regexp || await fn.matchstr(denops, context.input, val.regexp) != "")
+        (!options.head || /^\s*\S+$/.test(context.input)) &&
+        (!options.word || isWord) &&
+        (!val.regexp ||
+          await fn.matchstr(denops, context.input, val.regexp) != "")
       ) {
         for (const candidate of triggerCandidates) {
-          if (!(candidate.word in ret)) {
-            ret[candidate.word] = candidate;
+          const word = candidate.word as string;
+          if (!(word in ret)) {
+            ret[word] = candidate;
           }
         }
       }
