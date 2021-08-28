@@ -2,25 +2,19 @@ import {
   BaseSource,
   Candidate,
   Context,
-  DdcOptions,
-  SourceOptions,
-} from "https://deno.land/x/ddc_vim@v0.0.13/types.ts";
+} from "https://deno.land/x/ddc_vim@v0.3.0/types.ts";
 import {
   Denops,
   fn,
   vars,
-} from "https://deno.land/x/ddc_vim@v0.0.13/deps.ts#^";
+} from "https://deno.land/x/ddc_vim@v0.3.0/deps.ts#^";
 
 export class Source extends BaseSource {
-  async gatherCandidates(
+  async gatherCandidates(args: {
     denops: Denops,
     context: Context,
-    _ddcOptions: DdcOptions,
-    _sourceOptions: SourceOptions,
-    _sourceParams: Record<string, unknown>,
-    _completeStr: string,
-  ): Promise<Candidate[]> {
-    const snippets = await vars.b.get(denops, "deoppet_snippets") as Record<
+  }): Promise<Candidate[]> {
+    const snippets = await vars.b.get(args.denops, "deoppet_snippets") as Record<
       string,
       unknown
     >[];
@@ -28,8 +22,8 @@ export class Source extends BaseSource {
       return [];
     }
 
-    const wordMatch = /\w+$/.exec(context.input);
-    const charsMatch = /\S+$/.exec(context.input);
+    const wordMatch = /\w+$/.exec(args.context.input);
+    const charsMatch = /\S+$/.exec(args.context.input);
     const isWord = wordMatch && charsMatch && wordMatch[0] != charsMatch[0];
 
     const ret: Record<string, Candidate> = {} as Record<string, Candidate>;
@@ -48,10 +42,10 @@ export class Source extends BaseSource {
 
       const options = val.options as Record<string, Candidate>;
       if (
-        (!options.head || /^\s*\S+$/.test(context.input)) &&
+        (!options.head || /^\s*\S+$/.test(args.context.input)) &&
         (!options.word || isWord) &&
         (!val.regexp ||
-          await fn.matchstr(denops, context.input, val.regexp) != "")
+          await fn.matchstr(args.denops, args.context.input, val.regexp) != "")
       ) {
         for (const candidate of triggerCandidates) {
           const word = candidate.word as string;
