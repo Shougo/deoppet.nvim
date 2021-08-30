@@ -37,7 +37,6 @@ export class Source extends BaseSource {
         .map((v) => ({
           word: v as string,
           menu: menu,
-          dup: true,
         }));
 
       const options = val.options as Record<string, Candidate>;
