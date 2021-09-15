@@ -2,12 +2,12 @@ import {
   BaseSource,
   Candidate,
   Context,
-} from "https://deno.land/x/ddc_vim@v0.3.0/types.ts";
+} from "https://deno.land/x/ddc_vim@v0.5.0/types.ts";
 import {
   Denops,
   fn,
   vars,
-} from "https://deno.land/x/ddc_vim@v0.3.0/deps.ts#^";
+} from "https://deno.land/x/ddc_vim@v0.5.0/deps.ts#^";
 
 export class Source extends BaseSource {
   async gatherCandidates(args: {
@@ -24,7 +24,7 @@ export class Source extends BaseSource {
 
     const wordMatch = /\w+$/.exec(args.context.input);
     const charsMatch = /\S+$/.exec(args.context.input);
-    const isWord = wordMatch && charsMatch && wordMatch[0] != charsMatch[0];
+    const isWord = wordMatch && charsMatch && wordMatch[0] == charsMatch[0];
 
     const ret: Record<string, Candidate> = {} as Record<string, Candidate>;
     for (const key in snippets) {

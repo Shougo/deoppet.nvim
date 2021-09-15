@@ -157,15 +157,15 @@ A: Please use "g:deoppet#captures" variable for it.
 
 Q. How to enable deoppet the completion in ddc.vim?
 
-A.
->
+A. >
+
 	call ddc#custom#patch_global('sources', ['deoppet'])
 	call ddc#custom#patch_global('sourceOptions', {
 	    \ '_': {
 	    \   'matchers': ['matcher_head'],
 	    \   'sorters': ['sorter_rank']
 	    \ },
-	    \ 'deoppet': {'mark': 'dp'},
+	    \ 'deoppet': {'mark': 'dp', 'dup': v:true},
 	    \ })
 <
 ==============================================================================
