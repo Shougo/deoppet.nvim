@@ -2,14 +2,14 @@ import {
   BaseSource,
   Candidate,
   Context,
-} from "https://deno.land/x/ddc_vim@v0.5.0/types.ts";
+} from "https://deno.land/x/ddc_vim@v0.13.0/types.ts";
 import {
   Denops,
   fn,
   vars,
-} from "https://deno.land/x/ddc_vim@v0.5.0/deps.ts#^";
+} from "https://deno.land/x/ddc_vim@v0.13.0/deps.ts#^";
 
-export class Source extends BaseSource {
+export class Source extends BaseSource<{}> {
   async gatherCandidates(args: {
     denops: Denops,
     context: Context,
@@ -56,4 +56,6 @@ export class Source extends BaseSource {
     }
     return Object.values(ret);
   }
+
+  params(): {} { return {}; }
 }
