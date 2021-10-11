@@ -180,6 +180,9 @@ class Mapping():
         for ev in evals:
             self.expand_eval(ev)
 
+        if self._vim.call('exists', '*pum#close'):
+            self._vim.call('pum#close')
+
         # Indentation
         self._vim.call('deoppet#util#_indent_snippet',
                        linenr + 1, linenr + len(texts) - 1)
