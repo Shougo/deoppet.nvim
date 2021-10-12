@@ -279,6 +279,9 @@ class Mapping():
                 # Select begin to end.
                 self._vim.call('deoppet#util#_select_pos', mark_end)
 
+        if self._vim.call('exists', '*pum#close'):
+            self._vim.call('pum#close')
+
         # Update
         bvars['deoppet_expand_state'] = {
             'tabstops': tabstops,
