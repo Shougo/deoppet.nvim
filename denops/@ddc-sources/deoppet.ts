@@ -1,20 +1,21 @@
 import {
   BaseSource,
-  Candidate,
   Context,
-} from "https://deno.land/x/ddc_vim@v0.13.0/types.ts";
-import {
-  Denops,
-  fn,
-  vars,
-} from "https://deno.land/x/ddc_vim@v0.13.0/deps.ts#^";
+  Item,
+} from "https://deno.land/x/ddc_vim@v3.9.0/types.ts";
+import { Denops, fn, vars } from "https://deno.land/x/ddc_vim@v3.9.0/deps.ts#^";
 
-export class Source extends BaseSource<{}> {
-  async gatherCandidates(args: {
-    denops: Denops,
-    context: Context,
-  }): Promise<Candidate[]> {
-    const snippets = await vars.b.get(args.denops, "deoppet_snippets") as Record<
+type Params = Record<never, never>;
+
+export class Source extends BaseSource<Params> {
+  override async gather(args: {
+    denops: Denops;
+    context: Context;
+  }): Promise<Item[]> {
+    const snippets = await vars.b.get(
+      args.denops,
+      "deoppet_snippets",
+    ) as Record<
       string,
       unknown
     >[];
@@ -26,7 +27,7 @@ export class Source extends BaseSource<{}> {
     const charsMatch = /\S+$/.exec(args.context.input);
     const isWord = wordMatch && charsMatch && wordMatch[0] == charsMatch[0];
 
-    const ret: Record<string, Candidate> = {} as Record<string, Candidate>;
+    const ret: Record<string, Item> = {} as Record<string, Item>;
     for (const key in snippets) {
       const val = snippets[key];
       const menu = val.abbr
@@ -39,7 +40,7 @@ export class Source extends BaseSource<{}> {
           menu: menu,
         }));
 
-      const options = val.options as Record<string, Candidate>;
+      const options = val.options as Record<string, Item>;
       if (
         (!options.head || /^\s*\S+$/.test(args.context.input)) &&
         (!options.word || isWord) &&
@@ -57,5 +58,7 @@ export class Source extends BaseSource<{}> {
     return Object.values(ret);
   }
 
-  params(): {} { return {}; }
+  override params(): Params {
+    return {};
+  }
 }
