@@ -1,10 +1,12 @@
 # deoppet.nvim
 
+**Note**: Active developement on denippet.nvim has stopped. The only future
+changes will be bug fixes.
+
+Please see [Denippet.vim](https://github.com/uga-rosa/denippet.vim)
+
+
 Please read [help](doc/deoppet.txt) for details.
-
-[![Join the chat at https://gitter.im/Shougo/deoppet.nvim](https://badges.gitter.im/Shougo/deoppet.nvim.svg)](https://gitter.im/Shougo/deoppet.nvim?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
-Warning: This is alpha version! It is not intended to use for daily work.
 
 Deoppet is the abbreviation of "dark powered neo-snippet". It provides the
 snippet expansion.
